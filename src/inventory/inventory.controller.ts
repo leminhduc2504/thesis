@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
 import { CreateIngredientDto } from './Dto/create-ingredient.dto';
@@ -13,7 +13,11 @@ export class InventoryController {
         private inventoryService: InventoryService
     ){}
 
-    @Get ("/ingredient")
+    // @Get("/ingredient")
+    // async getAllIgredient(){
+    //     return this.inventoryService.GetAllIngredient()
+    // }
+
     @Post("/ingredient")
     async createIngredient(@Body() createIngredientDto: CreateIngredientDto): Promise<string>{
         return this.inventoryService.CreateIngredient(createIngredientDto)

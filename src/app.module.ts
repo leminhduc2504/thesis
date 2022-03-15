@@ -9,10 +9,10 @@ import { InventoryModule } from './inventory/inventory.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '103.116.105.48',
       port: 3306,
-      username: 'root',
-      password: 'leminhduc2504',
+      username: 'cud',
+      password: 'Cud2504@',
       database: 'thesis',
       autoLoadEntities: true,
       synchronize: true,
