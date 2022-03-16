@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
 import { CreateIngredientDto } from './Dto/create-ingredient.dto';
+import { GetIngredientsFilterDto } from './Dto/get-ingredients-filter-dto';
 import { Ingredient } from './ingredient.entity';
 import { IngredientRepository } from './ingredient.repository';
 
@@ -12,17 +14,17 @@ export class InventoryService {
         private inventoryRepository: IngredientRepository
     ){}
 
-    async GetAllIngredient(){
-        return null
+    async GetIngredients(filterDto: GetIngredientsFilterDto, user: User): Promise<Ingredient[]>{
+        return this.inventoryRepository.getIngredients(filterDto,user)
     }
 
-    async CreateIngredient(createIngredientDto:CreateIngredientDto):Promise<string>{
-        return this.inventoryRepository.CreateIngredient(createIngredientDto)
+    async CreateIngredient(createIngredientDto:CreateIngredientDto, user:User):Promise<string>{
+        return this.inventoryRepository.CreateIngredient(createIngredientDto, user)
     }
 
     async DeleteIngredient(id : string) : Promise<void>{
         return this.inventoryRepository.DeleteIngredient(id)
-        console.log(id)
+
     }
 
     async ChangeThresholdIngredient(id:string, changeThresholdIngredientDto:ChangeThresholdIngredientDto):Promise<Ingredient>{

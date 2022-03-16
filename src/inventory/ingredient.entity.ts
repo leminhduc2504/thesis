@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/auth/user.entity";
+import { Column, Entity, Exclusion, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Unit } from "./ingredientUnit.entity";
 
 @Entity()
@@ -19,7 +20,9 @@ export class Ingredient{
     lowThreshold: number = 0
 
     @ManyToOne(_type => Unit, (unit) => unit.ingredient )
+
     unit: Unit
 
-    
+    @ManyToOne((_type) => User, user => user.ingredients, {eager:false})
+    user:User
 }
