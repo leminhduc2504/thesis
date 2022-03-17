@@ -1,5 +1,5 @@
 import { userInfo } from "os";
-import { Ingredient } from "src/inventory/entity/ingredient.entity";
+import { Ingredient } from "src/inventory/Entity/ingredient.entity";
 import { Order } from "src/order/Entity/order.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
