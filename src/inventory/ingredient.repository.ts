@@ -5,7 +5,7 @@ import { EntityRepository, Repository } from "typeorm";
 import { ChangeThresholdIngredientDto } from "./Dto/change-threshold-ingredient.dto";
 import { CreateIngredientDto } from "./Dto/create-ingredient.dto";
 import { GetIngredientsFilterDto } from "./Dto/get-ingredients-filter-dto";
-import { Ingredient } from "./ingredient.entity";
+import { Ingredient } from "./entity/ingredient.entity";
 
 @EntityRepository(Ingredient)
 export class IngredientRepository extends Repository<Ingredient>{

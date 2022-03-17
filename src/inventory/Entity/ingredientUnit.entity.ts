@@ -9,6 +9,5 @@ export class Unit{
     @Column({ unique: true})
     unit: string
 
-    @OneToMany(_type => Ingredient, (ingredient) => ingredient.unit )
-    ingredient: Ingredient
+    
 }

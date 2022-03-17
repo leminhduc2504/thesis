@@ -4,6 +4,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { OrderModule } from './order/order.module';
+import { SupplierModule } from './supplier/supplier.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { InventoryModule } from './inventory/inventory.module';
     }),
     AuthModule,
     InventoryModule,
+    OrderModule,
+    SupplierModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -19,9 +19,6 @@ export class Ingredient{
     @Column()
     lowThreshold: number = 0
 
-    @ManyToOne(_type => Unit, (unit) => unit.ingredient )
-
-    unit: Unit
 
     @ManyToOne((_type) => User, user => user.ingredients, {eager:false})
     user:User

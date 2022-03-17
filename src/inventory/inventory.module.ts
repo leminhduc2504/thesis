@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { InventoryController } from './inventory.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Unit } from './ingredientUnit.entity';
+import { Unit } from './Entity/ingredientUnit.entity';
 import { IngredientRepository } from './ingredient.repository';
 import { AuthModule } from 'src/auth/auth.module';
 
