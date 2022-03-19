@@ -9,18 +9,18 @@ import { Dish } from "./Enitity/dish.entity";
 export class DishRepository extends Repository<Dish>{
     
 
-    // async getIngredients(filterDto: GetIngredientsFilterDto, user: User): Promise<Ingredient[]>{
-    //     const {search} = filterDto
-    //     const query = this.createQueryBuilder('ingredient')
-    //     query.where({user})
-    //     if(search){
-    //         query.andWhere(
-    //             'ingredient.name LIKE :search', {search: `%${search}%`}
-    //         )
-    //     }
-    //     const ingredients =await query.getMany()
-    //     return ingredients;
-    // }
+    async getDishs(user: User): Promise<Dish[]>{
+
+        const query = this.createQueryBuilder('ingredient')
+        query.where({user})
+        // if(search){
+        //     query.andWhere(
+        //         'ingredient.name LIKE :search', {search: `%${search}%`}
+        //     )
+        // }
+        const dishs =await query.getMany()
+        return dishs;
+    }
 
     async GetDishById(id: string): Promise<Dish>{
         const foundDish =await this.findOne(id)

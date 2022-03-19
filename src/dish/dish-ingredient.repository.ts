@@ -5,11 +5,7 @@ import { Dish } from "./Enitity/dish.entity";
 
 @EntityRepository(DishIngredient)
 export class DishIngredientRepository extends Repository<DishIngredient>{
-    constructor(
-
-    ){
-        super();
-    }
+    
 
 
     // async CraeteDishIngredients(ingredienIds: string[], dishId: string): Promise<string> {
@@ -18,6 +14,20 @@ export class DishIngredientRepository extends Repository<DishIngredient>{
     //     await this.save(newIngredient)
     //     return "success"
     // }
+
+    async GetDishIngredients(dish_id: string){
+
+        const found =await this.find({
+            relations: ['dish'],
+            loadRelationIds: true,
+            where:{
+            dish : {id :dish_id}}
+            
+        })
+        
+        return found;
+    }
+
 
     async CraeteDishIngredient(ingredient: Ingredient,amount: number, dish: Dish): Promise<string> {
         

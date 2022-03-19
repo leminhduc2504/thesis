@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
@@ -14,15 +14,24 @@ export class DishController {
         private dishService: DishService
     ){}
 
-    // @Get()
-    // async getDishs(
-    // @GetUser() user: User
-    // ): Promise<Dish[]>{
-    //     return this.dishService.GetDishs(user)
-    // }
+    @Get()
+    async GetDishs(
+    @GetUser() user: User
+    ): Promise<Dish[]>{
+        return this.dishService.GetDishs(user)
+    }
+
+    @Get("/:id")
+    async GetDishIngredients(
+        @Param('id') dish_id: string,
+    ){
+        return this.dishService.GetDishIngredients(dish_id);
+    }
+
+
 
     @Post()
-    async createDish(
+    async CreateDish(
         @Body() createDishDto: CreateDishDto,
         @GetUser() user: User
         ): Promise<Dish>{

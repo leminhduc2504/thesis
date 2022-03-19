@@ -5,6 +5,7 @@ import { InventoryService } from 'src/inventory/inventory.service';
 import { DishIngredientRepository } from './dish-ingredient.repository';
 import { DishRepository } from './dish.repository';
 import { CreateDishDto, DishIngredientInfo } from './Dto/create_dish.dto';
+import { DishIngredient } from './Enitity/dish-ingredient.entity';
 import { Dish } from './Enitity/dish.entity';
 
 @Injectable()
@@ -20,12 +21,16 @@ export class DishService {
         
     ){}
 
-    // async GetDishs(filterDto: GetDishDto, user: User): Promise<Dish[]>{
-    //     return this.dishRepository.getDishs(filterDto,user)
-    // }
+    async GetDishs( user: User): Promise<Dish[]>{
+        return this.dishRepository.getDishs(user)
+    }
     
     async GetDishById(id: string): Promise<Dish>{
         return this.dishRepository.GetDishById(id)
+    }
+
+    async GetDishIngredients(dish_id: string): Promise<DishIngredient[]>{
+        return this.dishIngredientRepository.GetDishIngredients(dish_id)
     }
 
     async CreateListDishIngredient(ingredientInfo: DishIngredientInfo[], dishId: string){

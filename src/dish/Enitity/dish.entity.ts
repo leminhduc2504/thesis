@@ -5,7 +5,7 @@ import { DishIngredient } from "./dish-ingredient.entity";
 
 @Entity()
 export class Dish{
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn("increment")
     id : string
 
     @Column()
