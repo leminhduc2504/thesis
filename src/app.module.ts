@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { OrderModule } from './order/order.module';
 import { SupplierModule } from './supplier/supplier.module';
+import { DishModule } from './dish/dish.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SupplierModule } from './supplier/supplier.module';
     InventoryModule,
     OrderModule,
     SupplierModule,
+    DishModule,
   ],
   controllers: [AppController],
   providers: [AppService],

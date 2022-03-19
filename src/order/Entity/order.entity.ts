@@ -1,5 +1,6 @@
 import { User } from "src/auth/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Dish } from "src/dish/Enitity/dish.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Order{
@@ -11,6 +12,9 @@ export class Order{
 
     @ManyToOne((_type) => User, user => user.orders, {eager:false})
     user:User
+
+    // @OneToMany((_type) => Dish, (dish) => dish.order, {eager:true})
+    // dishs: Dish[]
 }
 
 

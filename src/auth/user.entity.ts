@@ -1,4 +1,5 @@
 import { userInfo } from "os";
+import { Dish } from "src/dish/Enitity/dish.entity";
 import { Ingredient } from "src/inventory/Entity/ingredient.entity";
 import { Order } from "src/order/Entity/order.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
@@ -23,5 +24,8 @@ export class User{
 
     @OneToMany((_type) => Order, (order) => order.user, {eager:true})
     orders: Order[]
+
+    @OneToMany((_type) => Dish, (dish) => dish.user, {eager:true})
+    dishs: Dish[]
 
 }

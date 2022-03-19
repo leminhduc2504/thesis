@@ -10,7 +10,7 @@ import { Ingredient } from "./Entity/ingredient.entity";
 @EntityRepository(Ingredient)
 export class IngredientRepository extends Repository<Ingredient>{
 
-    async getIngredients(filterDto: GetIngredientsFilterDto, user: User): Promise<Ingredient[]>{
+    async GetIngredients(filterDto: GetIngredientsFilterDto, user: User): Promise<Ingredient[]>{
         const {search} = filterDto
         const query = this.createQueryBuilder('ingredient')
         query.where({user})

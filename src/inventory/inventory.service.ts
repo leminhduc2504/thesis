@@ -14,8 +14,12 @@ export class InventoryService {
         private inventoryRepository: IngredientRepository
     ){}
 
+    async GetIngredientsById(id: string): Promise<Ingredient>{
+        return this.inventoryRepository.GetIngredientById(id)
+    }
+
     async GetIngredients(filterDto: GetIngredientsFilterDto, user: User): Promise<Ingredient[]>{
-        return this.inventoryRepository.getIngredients(filterDto,user)
+        return this.inventoryRepository.GetIngredients(filterDto,user)
     }
 
     async CreateIngredient(createIngredientDto:CreateIngredientDto, user:User):Promise<string>{
