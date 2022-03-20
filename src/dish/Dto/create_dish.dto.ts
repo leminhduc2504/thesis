@@ -2,15 +2,15 @@
 export class CreateDishDto {
     name: string
 
-    retail_price: number
+    retailPrice: number
 
-    ingredient_price: number
+    ingredientPrice: number
 
-    ingredient_infos!: DishIngredientInfo[]
+    ingredientInfos!: DishIngredientInfo[]
     
 }
 
 export class DishIngredientInfo {
-    ingredient_ids: string
+    ingredientId: string
     amount: number
 }

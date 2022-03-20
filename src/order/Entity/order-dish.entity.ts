@@ -10,9 +10,9 @@ export class OrderDish {
     @Column()
     amount: number
 
-    @ManyToOne((_type) => Dish, dish => dish.order_dishs, {eager:false})
+    @ManyToOne((_type) => Dish, dish => dish.orderDishs, {eager:false})
     dish: Dish
     
-    @ManyToOne((_type) => Order, order => order.order_dishs, {eager:false})
+    @ManyToOne((_type) => Order, order => order.orderDishs, {eager:false})
     order: Order
 }

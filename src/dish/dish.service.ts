@@ -36,7 +36,7 @@ export class DishService {
     async CreateListDishIngredient(ingredientInfo: DishIngredientInfo[], dishId: string){
         for (let i = 0; i < ingredientInfo.length; i++) {
             this.dishIngredientRepository.CraeteDishIngredient(
-                await this.inventoryService.GetIngredientsById(ingredientInfo[i].ingredient_ids),
+                await this.inventoryService.GetIngredientsById(ingredientInfo[i].ingredientId),
                 ingredientInfo[i].amount,
                 await this.GetDishById(dishId))
         }
@@ -49,9 +49,9 @@ export class DishService {
 
     }
     async CreateDish(createDishDto:CreateDishDto, user:User):Promise<Dish>{
-        const {name,retail_price,ingredient_price,ingredient_infos} = createDishDto
-        const newDish =await this.dishRepository.CreateDish(name,retail_price,ingredient_price, user)
-        await this.CreateListDishIngredient(ingredient_infos, newDish.id)
+        const {name,retailPrice,ingredientPrice,ingredientInfos} = createDishDto
+        const newDish =await this.dishRepository.CreateDish(name,retailPrice,ingredientPrice, user)
+        await this.CreateListDishIngredient(ingredientInfos, newDish.id)
         return newDish
     }
 }

@@ -13,16 +13,16 @@ export class Dish{
     name: string
 
     @Column(({nullable: true,}))
-    retail_price: number = 0
+    retailPrice: number = 0
 
     @Column(({nullable: true,}))
-    ingredient_price: number = 0
+    ingredientPrice: number = 0
 
-    @OneToMany((_type) => DishIngredient, (dish_ingredient) => dish_ingredient.dish, {eager:true})
-    dish_ingredients: DishIngredient[]
+    @OneToMany((_type) => DishIngredient, (dishIngredient) => dishIngredient.dish, {eager:true})
+    dishIngredients: DishIngredient[]
 
-    @OneToMany((_type) => OrderDish, (order_dish) => order_dish.dish, {eager:true})
-    order_dishs: OrderDish[]
+    @OneToMany((_type) => OrderDish, (orderDish) => orderDish.dish, {eager:true})
+    orderDishs: OrderDish[]
 
     // @ManyToOne((_type) => Order, order => order.dishs, {eager:false})
     // order:Order

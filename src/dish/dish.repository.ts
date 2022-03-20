@@ -30,10 +30,10 @@ export class DishRepository extends Repository<Dish>{
         return foundDish
     }
 
-    async CreateDish(name: string,retail_price: number, ingredient_price: number, user: User): Promise<Dish>{
+    async CreateDish(name: string,retailPrice: number, ingredientPrice: number, user: User): Promise<Dish>{
         // const {name,ingredient_ids} = createDishDto
         
-        const newDish = this.create({name,retail_price,ingredient_price,user})
+        const newDish = this.create({name,retailPrice,ingredientPrice,user})
         await this.save(newDish)
         return newDish
     }

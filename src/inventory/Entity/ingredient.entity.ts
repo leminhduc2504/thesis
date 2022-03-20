@@ -23,8 +23,8 @@ export class Ingredient{
     @ManyToOne((_type) => User, user => user.ingredients, {eager:false})
     user:User
 
-    @OneToMany((_type) => DishIngredient, (dish_ingredient) => dish_ingredient.ingredient, {eager:true})
-    dish_ingredients: DishIngredient[]
+    @OneToMany((_type) => DishIngredient, (dishIngredient) => dishIngredient.ingredient, {eager:true})
+    dishIngredients: DishIngredient[]
 
     // @Column()
     // unit: IngredientUnit = IngredientUnit.kilogram

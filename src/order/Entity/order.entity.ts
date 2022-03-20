@@ -14,8 +14,8 @@ export class Order{
     @ManyToOne((_type) => User, user => user.orders, {eager:false})
     user:User
 
-    @OneToMany((_type) => OrderDish, (order_dish) => order_dish.order, {eager:true})
-    order_dishs: OrderDish[]
+    @OneToMany((_type) => OrderDish, (orderDish) => orderDish.order, {eager:true})
+    orderDishs: OrderDish[]
 
 }
 
