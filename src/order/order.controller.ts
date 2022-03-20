@@ -20,7 +20,7 @@ export class OrderController {
     }
 
     @Post()
-    async createIngredient(
+    async createOrder(
         @GetUser() user: User
         ): Promise<Order>{
         return this.orderService.CreateOrder(user)

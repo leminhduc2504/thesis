@@ -1,7 +1,10 @@
-import { Ingredient } from "src/inventory/Entity/ingredient.entity"
 
 export class CreateDishDto {
     name: string
+
+    retail_price: number
+
+    ingredient_price: number
 
     ingredient_infos!: DishIngredientInfo[]
     
