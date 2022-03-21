@@ -11,7 +11,10 @@ export class Order{
     @Column()
     status: OrderStatus
 
-    @ManyToOne((_type) => User, user => user.orders, {eager:false})
+    @Column()
+    orderPrice: number
+
+    @ManyToOne((_type) => User, user => user.orders, {eager:false,onDelete: 'CASCADE'})
     user:User
 
     @OneToMany((_type) => OrderDish, (orderDish) => orderDish.order, {eager:true})

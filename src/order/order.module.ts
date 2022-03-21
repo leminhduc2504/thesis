@@ -6,10 +6,10 @@ import { AuthModule } from 'src/auth/auth.module';
 import { OrderRepository } from './order.repository';
 // import { Dish } from 'src/dish/Enitity/dish.entity';
 import { DishModule } from 'src/dish/dish.module';
-import { OrderDish } from './Entity/order-dish.entity';
+import { OrderDishRepository } from './order-dish.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([OrderRepository,OrderDish]),AuthModule,DishModule],
+  imports: [TypeOrmModule.forFeature([OrderRepository,OrderDishRepository]),AuthModule,DishModule],
   providers: [OrderService],
   controllers: [OrderController]
 })

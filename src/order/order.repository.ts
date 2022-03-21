@@ -11,8 +11,8 @@ export class OrderRepository extends Repository<Order>{
         return orders;
     }
 
-    async CreateOrder(user: User): Promise<Order>{
-        const newOrder = this.create({status: OrderStatus.open,user})
+    async CreateOrder(orderPrice ,user: User): Promise<Order>{
+        const newOrder = this.create({orderPrice,status: OrderStatus.open,user})
         await this.save(newOrder)
         return newOrder
     }

@@ -7,10 +7,10 @@ export class DishIngredient{
     @PrimaryGeneratedColumn('increment')
     id : string
 
-    @ManyToOne((_type) => Ingredient, ingredient => ingredient.dishIngredients, {eager:false})
+    @ManyToOne((_type) => Ingredient, ingredient => ingredient.dishIngredients, {eager:false,onDelete: 'CASCADE'})
     ingredient: Ingredient
  
-    @ManyToOne((_type) => Dish, dish => dish.dishIngredients, {eager:false})
+    @ManyToOne((_type) => Dish, dish => dish.dishIngredients, {eager:false,onDelete: 'CASCADE'})
     dish: Dish
     
     @Column()

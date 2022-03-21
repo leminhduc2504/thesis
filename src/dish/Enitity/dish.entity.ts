@@ -27,6 +27,6 @@ export class Dish{
     // @ManyToOne((_type) => Order, order => order.dishs, {eager:false})
     // order:Order
 
-    @ManyToOne((_type) => User, user => user.dishs, {eager:false})
+    @ManyToOne((_type) => User, user => user.dishs, {eager:false,onDelete: 'CASCADE'})
     user:User
 }

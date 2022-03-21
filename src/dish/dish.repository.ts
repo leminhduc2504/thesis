@@ -11,8 +11,9 @@ export class DishRepository extends Repository<Dish>{
 
     async getDishs(user: User): Promise<Dish[]>{
 
-        const query = this.createQueryBuilder('ingredient')
+        const query = this.createQueryBuilder('dish')
         query.where({user})
+        query.leftJoinAndSelect("dish.dishIngredients","dishIngredients")
         // if(search){
         //     query.andWhere(
         //         'ingredient.name LIKE :search', {search: `%${search}%`}
