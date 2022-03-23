@@ -16,16 +16,16 @@ export class User{
     @Column()
     password: string
 
-    @OneToMany((_type) => Ingredient, (ingredient) => ingredient.user, {eager:true})
+    @OneToMany((_type) => Ingredient, (ingredient) => ingredient.user)
     ingredients: Ingredient[]
 
-    @OneToMany((_type) => Supplier, (supplier) => supplier.user, {eager:true})
+    @OneToMany((_type) => Supplier, (supplier) => supplier.user )
     suppliers: Supplier[]
 
-    @OneToMany((_type) => Order, (order) => order.user, {eager:true})
+    @OneToMany((_type) => Order, (order) => order.user )
     orders: Order[]
 
-    @OneToMany((_type) => Dish, (dish) => dish.user, {eager:true})
+    @OneToMany((_type) => Dish, (dish) => dish.user)
     dishs: Dish[]
 
 }

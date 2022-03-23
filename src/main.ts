@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { TransformInterceptor } from './transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  // app.useGlobalInterceptors(new TransformInterceptor())
   const config = new DocumentBuilder()
     .setTitle('Cats example')
     .setDescription('The cats API description')

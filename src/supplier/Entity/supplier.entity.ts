@@ -10,5 +10,6 @@ export class Supplier{
     name: string
 
     @ManyToOne((_type) => User, user => user.suppliers, {eager:false})
+    
     user:User
 }

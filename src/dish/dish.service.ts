@@ -46,8 +46,8 @@ export class DishService {
         //     ingredient.amount,
         //     await this.GetDishById(dishId)
         // ))
-
     }
+
     async CreateDish(createDishDto:CreateDishDto, user:User):Promise<Dish>{
         const {name,retailPrice,ingredientPrice,ingredientInfos} = createDishDto
         const newDish =await this.dishRepository.CreateDish(name,retailPrice,ingredientPrice, user)

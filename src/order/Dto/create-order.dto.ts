@@ -2,11 +2,11 @@ export class CreateOrderDto {
 
     price: number
 
-    ingredientInfos!: DishIngredientInfo[]
+    dishInfos!: DishInfo[]
     
 }
 
-export class DishIngredientInfo {
-    DishIngredientId: string
+export class DishInfo {
+    dishId: string
     amount: number
 }

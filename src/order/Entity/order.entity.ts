@@ -1,20 +1,34 @@
+import { Exclude } from "class-transformer";
+import { timestamp } from "rxjs";
 import { User } from "src/auth/user.entity";
 import { Dish } from "src/dish/Enitity/dish.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { OrderDish } from "./order-dish.entity";
 
 @Entity()
 export class Order{
-    @PrimaryGeneratedColumn('uuid')
-    id : string
+    @PrimaryGeneratedColumn('increment')
+    orderId : number
 
     @Column()
     status: OrderStatus
 
+    // @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" } )
+    // createdAt!: Date 
+
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" } )
+    createdAt!: Date 
+
+    @Column({nullable: true})
+    acceptAt: Date = null
+
+    @Column({nullable: true})
+    fishedAt: Date = null
+
     @Column()
     orderPrice: number
 
-    @ManyToOne((_type) => User, user => user.orders, {eager:false,onDelete: 'CASCADE'})
+    @ManyToOne((_type) => User, user => user.orders, {eager:false,onDelete: 'CASCADE' })
     user:User
 
     @OneToMany((_type) => OrderDish, (orderDish) => orderDish.order, {eager:true})

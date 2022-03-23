@@ -13,7 +13,9 @@ export class DishRepository extends Repository<Dish>{
 
         const query = this.createQueryBuilder('dish')
         query.where({user})
-        query.leftJoinAndSelect("dish.dishIngredients","dishIngredients")
+        .leftJoinAndSelect("dish.dishIngredients","dishIngredients")
+        .leftJoinAndSelect("dishIngredients.ingredient", "ingredient")
+    
         // if(search){
         //     query.andWhere(
         //         'ingredient.name LIKE :search', {search: `%${search}%`}

@@ -18,9 +18,9 @@ export class OrderDishRepository extends Repository<OrderDish>{
         return found;
     }
 
-
-    async CraeteOrderDish(dish: Dish,amount: number, order: Order): Promise<string> {
-        const newOrderDish= this.create({amount,dish,order})
+s
+    async CraeteOrderDish(dish: Dish,amount: number, order: Order) {
+        const newOrderDish = this.create({dish,amount,order})
         await this.save(newOrderDish)
         return "success"
     }

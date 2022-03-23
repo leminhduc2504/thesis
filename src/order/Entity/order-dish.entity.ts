@@ -4,8 +4,8 @@ import { Order } from "./order.entity";
 
 @Entity()
 export class OrderDish {
-    @PrimaryGeneratedColumn('uuid')
-    id : string
+    @PrimaryGeneratedColumn('increment')
+    orderDishId : string
 
     @Column()
     amount: number

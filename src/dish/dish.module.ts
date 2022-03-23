@@ -11,6 +11,7 @@ import { InventoryService } from 'src/inventory/inventory.service';
 @Module({
   imports: [TypeOrmModule.forFeature([DishRepository,DishIngredientRepository]),AuthModule,InventoryModule],
   providers: [DishService],
-  controllers: [DishController]
+  controllers: [DishController],
+  exports:[DishService]
 })
 export class DishModule {}
