@@ -15,8 +15,8 @@ export class Ingredient{
     @Column()
     stock!: number
 
-    @Column()
-    priceEach!: number
+    @Column({nullable: true})
+    priceEach: number = 0
 
     @Column()
     highThreshold: number = 100
@@ -40,6 +40,8 @@ export class Ingredient{
     @Column({nullable:true})
     autoOrderAmount: number
 
+    @Column()
+    unit : IngredientUnit = IngredientUnit.kilogram
 
 }
 
