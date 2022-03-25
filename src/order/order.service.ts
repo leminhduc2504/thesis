@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { DishService } from 'src/dish/dish.service';
 import { CreateOrderDto, DishInfo } from './Dto/create-order.dto';
-import { Order } from './Entity/order.entity';
+import { FilterGetOrderDto } from './Dto/filter-get-order.dto';
+import { Order, OrderStatus } from './Entity/order.entity';
 import { OrderDishRepository } from './order-dish.repository';
 import { OrderRepository } from './order.repository';
 
@@ -19,8 +20,12 @@ export class OrderService {
         private dishService: DishService
     ){}
 
-    async GetOrders(user: User): Promise<Order[]>{
-        return this.orderRepository.getOrders(user)
+    async GetOrders(filter:FilterGetOrderDto, user: User): Promise<Order[]>{
+        return this.orderRepository.GetOrders(filter,user)
+    }
+
+    async GetOrderById(id:number,user: User): Promise<Order>{
+        return this.orderRepository.GetOrderById(id,user)
     }
 
     async CreateListOrderDish(dishInfos: DishInfo[], order:Order){
@@ -37,5 +42,32 @@ export class OrderService {
         const newOrder =await this.orderRepository.CreateOrder(price, user)
         await this.CreateListOrderDish(dishInfos, newOrder)
         return newOrder
+    }
+
+    async AcceptOrder(orderId: number ,user: User): Promise<Order>{
+        const order =await this.GetOrderById(orderId,user)
+        if(order.status == OrderStatus.open){
+        order.status = OrderStatus.processing
+        await this.orderRepository.save(order)
+        const d = new Date();
+        d.setHours(d.getHours() - d.getTimezoneOffset() / 60);
+        order.acceptAt = d
+        return order
+        }
+        else{
+            throw new BadRequestException()
+        }
+    }
+
+    async FinishOrder(orderId: number, user: User): Promise<Order>{
+        const order = await this.GetOrderById(orderId,user)
+        order.status = OrderStatus.finished
+
+        const d = new Date();
+        d.setHours(d.getHours() - d.getTimezoneOffset() / 60);
+        order.fishedAt = d
+        await this.orderRepository.save(order)
+        order.orderDishs
+        return order
     }
 }

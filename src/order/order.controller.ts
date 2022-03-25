@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { CreateOrderDto } from './Dto/create-order.dto';
-import { Order } from './Entity/order.entity';
+import { FilterGetOrderDto } from './Dto/filter-get-order.dto';
+import { Order, OrderStatus } from './Entity/order.entity';
 import { OrderService } from './order.service';
 
 @Controller('order')
@@ -15,9 +16,10 @@ export class OrderController {
 
     @Get()
     async getOrders(
+    @Query() filter : FilterGetOrderDto,
     @GetUser() user: User
     ): Promise<Order[]>{
-        return this.orderService.GetOrders(user)
+        return this.orderService.GetOrders(filter,user)
     }
 
     @Post()
@@ -26,5 +28,15 @@ export class OrderController {
         @Body() creatOrderDto: CreateOrderDto,
         ): Promise<Order>{
         return this.orderService.CreateOrder(creatOrderDto,user)
+    }
+
+    @Patch("/accept_order/:id")
+    async acceptOrder(@GetUser() user: User,@Param('id') id: number): Promise<Order>{
+        return this.orderService.AcceptOrder(id,user)
+    }
+
+    @Patch("/finish_order/:id")
+    async finishOrder(@GetUser() user: User,@Param('id') id: number): Promise<Order>{
+        return this.orderService.FinishOrder(id,user)
     }
 }

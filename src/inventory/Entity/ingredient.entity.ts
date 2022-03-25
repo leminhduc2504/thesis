@@ -1,7 +1,8 @@
 import { Exclude } from "class-transformer";
 import { User } from "src/auth/user.entity";
 import { DishIngredient } from "src/dish/Enitity/dish-ingredient.entity";
-import { Column, Entity, Exclusion, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Supplier } from "src/supplier/Entity/supplier.entity";
+import { AfterUpdate, Column, Entity, Exclusion, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Ingredient{
@@ -12,7 +13,10 @@ export class Ingredient{
     name: string
 
     @Column()
-    stock: number
+    stock!: number
+
+    @Column()
+    priceEach!: number
 
     @Column()
     highThreshold: number = 100
@@ -27,8 +31,15 @@ export class Ingredient{
     @OneToMany((_type) => DishIngredient, (dishIngredient) => dishIngredient.ingredient, {eager:true})
     dishIngredients: DishIngredient[]
 
-    // @Column()
-    // unit: IngredientUnit = IngredientUnit.kilogram
+    @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:false})
+    supplier?: Supplier
+
+    @Column({nullable:true})
+    onDilivery: number
+
+    @Column({nullable:true})
+    autoOrderAmount: number
+
 
 }
 
