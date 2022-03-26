@@ -25,7 +25,7 @@ export class Order{
     @Column({nullable: true})
     fishedAt: Date = null
 
-    @Column()
+    @Column({type: "decimal", precision: 6, scale: 2, nullable: true })
     orderPrice: number
 
     @ManyToOne((_type) => User, user => user.orders, {eager:false,onDelete: 'CASCADE' })

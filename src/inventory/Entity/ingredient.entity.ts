@@ -12,16 +12,16 @@ export class Ingredient{
     @Column()
     name: string
 
-    @Column()
+    @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
     stock!: number
 
-    @Column({nullable: true})
+    @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
     priceEach: number = 0
 
-    @Column()
+    @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
     highThreshold: number = 100
 
-    @Column()
+    @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
     lowThreshold: number = 10
 
 
@@ -34,10 +34,10 @@ export class Ingredient{
     @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:false})
     supplier?: Supplier
 
-    @Column({nullable:true})
+    @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
     onDilivery: number
 
-    @Column({nullable:true})
+    @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
     autoOrderAmount: number
 
     @Column()

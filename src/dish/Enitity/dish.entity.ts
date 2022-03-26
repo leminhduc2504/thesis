@@ -13,10 +13,10 @@ export class Dish{
     @Column()
     name: string
 
-    @Column(({nullable: true,}))
+    @Column("decimal", { precision: 5, scale: 2 })
     retailPrice: number = 0
 
-    @Column(({nullable: true,}))
+    @Column("decimal", { precision: 5, scale: 2 })
     ingredientPrice: number = 0
 
     @OneToMany((_type) => DishIngredient, (dishIngredient) => dishIngredient.dish, {eager:true})

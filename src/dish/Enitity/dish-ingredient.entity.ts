@@ -13,7 +13,7 @@ export class DishIngredient{
     @ManyToOne((_type) => Dish, dish => dish.dishIngredients, {eager:false,onDelete: 'CASCADE'})
     dish: Dish
     
-    @Column()
+    @Column("decimal", { precision: 4, scale: 2 })
     amount: number = 0
 
     @Column()
