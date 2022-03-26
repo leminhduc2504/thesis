@@ -26,8 +26,8 @@ export class InventoryService {
         return this.inventoryRepository.CreateIngredient(createIngredientDto, user)
     }
 
-    async DeleteIngredient(id : string) : Promise<void>{
-        return this.inventoryRepository.DeleteIngredient(id)
+    async DeleteIngredient(id : string,user:User) : Promise<void>{
+        return this.inventoryRepository.DeleteIngredient(id,user)
 
     }
 

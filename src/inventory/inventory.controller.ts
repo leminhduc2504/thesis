@@ -32,8 +32,8 @@ export class InventoryController {
     }
 
     @Delete('/ingredient/:id')
-    async deleteIngredient(@Param('id') id: string): Promise<void> {
-        return this.inventoryService.DeleteIngredient(id)
+    async deleteIngredient(@Param('id') id: string,@GetUser() user: User): Promise<void> {
+        return this.inventoryService.DeleteIngredient(id,user)
     }
 
     @Patch('/ingredient/threshold/:id')

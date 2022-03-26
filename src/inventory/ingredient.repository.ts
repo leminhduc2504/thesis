@@ -32,15 +32,15 @@ export class IngredientRepository extends Repository<Ingredient>{
     }
 
     async CreateIngredient(createIngredient: CreateIngredientDto, user: User): Promise<string>{
-        const {name, stock} = createIngredient
+        const {name, stock, priceEach, unit} = createIngredient
 
-        const newIngredient = this.create({name,stock,user})
+        const newIngredient = this.create({name,stock,user,priceEach,unit})
         await this.save(newIngredient)
         return "success"
     }
 
-    async DeleteIngredient(id: string): Promise<void>{
-        const deletedIngredint = await this.delete(id)
+    async DeleteIngredient(id: string,user:User){
+        const deletedIngredint = await this.delete({id,user})
     }
 
     async ChangeThreshold(id:string, newThreshold: ChangeThresholdIngredientDto ): Promise<Ingredient>{

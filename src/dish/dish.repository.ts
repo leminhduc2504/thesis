@@ -26,6 +26,12 @@ export class DishRepository extends Repository<Dish>{
     }
 
     async GetDishById(id: string): Promise<Dish>{
+        // const query = this.createQueryBuilder('dish')
+        // query.where({user,id})
+        // .leftJoinAndSelect("dish.dishIngredients","dishIngredients")
+        // .leftJoinAndSelect("dishIngredients.ingredient", "ingredient")
+        // const foundDish =await query.getMany()
+
         const foundDish =await this.findOne(id)
         if(!foundDish){
             throw new NotFoundException(`Task with id '${id}' not found`)
@@ -39,5 +45,9 @@ export class DishRepository extends Repository<Dish>{
         const newDish = this.create({name,retailPrice,ingredientPrice,user})
         await this.save(newDish)
         return newDish
+    }
+
+    async DeleteDish(id: string,user:User){
+        const deletedDish = await this.delete({id,user})
     }
 }

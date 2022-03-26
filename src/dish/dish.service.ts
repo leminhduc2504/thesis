@@ -54,4 +54,8 @@ export class DishService {
         await this.CreateListDishIngredient(ingredientInfos, newDish.id)
         return newDish
     }
+
+    async DeleteDish(id:string, user:User){
+        return this.dishRepository.DeleteDish(id,user)
+    }
 }

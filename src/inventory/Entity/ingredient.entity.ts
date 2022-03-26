@@ -28,7 +28,7 @@ export class Ingredient{
     @ManyToOne((_type) => User, user => user.ingredients, {eager:false})
     user:User
 
-    @OneToMany((_type) => DishIngredient, (dishIngredient) => dishIngredient.ingredient, {eager:true})
+    @OneToMany((_type) => DishIngredient, (dishIngredient) => dishIngredient.ingredient, {eager:false})
     dishIngredients: DishIngredient[]
 
     @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:false})

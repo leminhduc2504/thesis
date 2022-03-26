@@ -1,3 +1,4 @@
+import { User } from "src/auth/user.entity";
 import { Ingredient } from "src/inventory/Entity/ingredient.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { DishIngredient } from "./Enitity/dish-ingredient.entity";
@@ -15,17 +16,21 @@ export class DishIngredientRepository extends Repository<DishIngredient>{
     //     return "success"
     // }
 
-    async GetDishIngredients(dish_id: string){
+    async GetDishIngredients(dishId: string){
+        const query = this.createQueryBuilder('dish_ingredient')
+        .andWhere('dish_ingredient.dishId = :dishId',{dishId})
+        .leftJoinAndSelect("dish_ingredient.ingredient", "ingredient")
+        const foundIngredientDish =await query.getMany()
 
-        const found =await this.find({
-            relations: ['dish'],
-            loadRelationIds: true,
-            where:{
-            dish : {id :dish_id}}
-            
-        })
+
+        // const foundIngredientDish =await this.find({
+        //     relations: ['dish'],
+        //     loadRelationIds: true,
+        //     where:{
+        //     dish : {id :dishId}}
+        // })
         
-        return found;
+        return foundIngredientDish;
     }
 
 
