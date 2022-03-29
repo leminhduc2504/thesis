@@ -7,10 +7,10 @@ export class OrderDish {
     @PrimaryGeneratedColumn('increment')
     orderDishId : string
 
-    @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
+    @Column({nullable: true })
     amount: number
 
-    @ManyToOne((_type) => Dish, dish => dish.orderDishs, {eager:false,onDelete: 'CASCADE'})
+    @ManyToOne((_type) => Dish, dish => dish.orderDishs, {eager:true,onDelete: 'CASCADE'})
     dish: Dish
     
     @ManyToOne((_type) => Order, order => order.orderDishs, {eager:false,onDelete: 'CASCADE'})

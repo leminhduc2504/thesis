@@ -16,8 +16,8 @@ export class Order{
     // @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" } )
     // createdAt!: Date 
 
-    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" } )
-    createdAt!: Date 
+    @CreateDateColumn({nullable: true} )
+    createdAt: Date = null
 
     @Column({nullable: true})
     acceptAt: Date = null

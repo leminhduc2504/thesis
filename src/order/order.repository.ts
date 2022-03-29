@@ -40,7 +40,9 @@ export class OrderRepository extends Repository<Order>{
     }
 
     async CreateOrder(orderPrice: number ,user: User): Promise<Order>{
-        const newOrder = this.create({orderPrice, status: OrderStatus.open,user})
+        const createdAt = new Date();
+        createdAt.setHours(createdAt.getHours() - createdAt.getTimezoneOffset() / 60);
+        const newOrder = this.create({createdAt,orderPrice, status: OrderStatus.open,user})
         await this.save(newOrder)
         return newOrder
     }

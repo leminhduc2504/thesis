@@ -1,6 +1,6 @@
 import { NotFoundException } from "@nestjs/common";
-import { identity, NotFoundError } from "rxjs";
 import { User } from "src/auth/user.entity";
+import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { ChangeThresholdIngredientDto } from "./Dto/change-threshold-ingredient.dto";
 import { CreateIngredientDto } from "./Dto/create-ingredient.dto";
@@ -53,5 +53,15 @@ export class IngredientRepository extends Repository<Ingredient>{
         return ingredient
     }
 
-   
+   async ChangeStock(id:string, amount:number){
+        const foundIngredient =await this.findOne(id)
+        foundIngredient.stock -= amount
+        await this.save(foundIngredient)
+   }
+
+   async SetSupplier(id: string, supplier: Supplier, user: User){
+       const foundIngredient = await this.findOne(id)
+       foundIngredient.supplier = supplier
+       await this.save(foundIngredient)
+   }
 }

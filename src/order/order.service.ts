@@ -40,6 +40,7 @@ export class OrderService {
     async CreateOrder(createOrderDto:CreateOrderDto, user:User):Promise<Order>{
         const {price, dishInfos} = createOrderDto
         const newOrder =await this.orderRepository.CreateOrder(price, user)
+        
         await this.CreateListOrderDish(dishInfos, newOrder)
         return newOrder
     }
@@ -49,9 +50,7 @@ export class OrderService {
         if(order.status == OrderStatus.open){
         order.status = OrderStatus.processing
         await this.orderRepository.save(order)
-        const d = new Date();
-        d.setHours(d.getHours() - d.getTimezoneOffset() / 60);
-        order.acceptAt = d
+        order.acceptAt = this.GetTime()
         return order
         }
         else{
@@ -61,13 +60,26 @@ export class OrderService {
 
     async FinishOrder(orderId: number, user: User): Promise<Order>{
         const order = await this.GetOrderById(orderId,user)
-        order.status = OrderStatus.finished
+        console.log(order)
+        
+        order.orderDishs.forEach( async (orderDish) => {
+            console.log(orderDish)
+            const dishId = await this.orderDishRepository.GetDishIdByOrderDishId(orderDish.orderDishId)
+            this.dishService.TakeIngredient(orderDish.amount,dishId)
+        })
 
-        const d = new Date();
-        d.setHours(d.getHours() - d.getTimezoneOffset() / 60);
-        order.fishedAt = d
+        order.status = OrderStatus.finished
+        order.fishedAt = this.GetTime()
         await this.orderRepository.save(order)
         order.orderDishs
         return order
     }
+
+    GetTime():Date{
+        const d = new Date();
+        d.setHours(d.getHours() - d.getTimezoneOffset() / 60);
+        return d
+    }
+
+    
 }

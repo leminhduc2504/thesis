@@ -1,6 +1,7 @@
 import { User } from "src/auth/user.entity";
 import { Ingredient } from "src/inventory/Entity/ingredient.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Invoice } from "../../inventory/Entity/invoice.entity";
 
 @Entity()
 export class Supplier{
@@ -19,6 +20,9 @@ export class Supplier{
     @ManyToOne((_type) => User, user => user.suppliers, {eager:false})
     user:User
 
-    @OneToMany((_type) => Ingredient, (ingredient) => ingredient.supplier, {eager:true})
+    @OneToMany( (_type) => Ingredient, (ingredient) => ingredient.supplier,{cascade:true})
     ingredients: Ingredient[]
+
+    @OneToMany((_type) => Invoice, (invoice) => invoice.supplier)
+    invoices: Invoice[]
 }

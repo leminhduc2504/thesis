@@ -2,6 +2,7 @@ import { userInfo } from "os";
 import { Dish } from "src/dish/Enitity/dish.entity";
 import { Ingredient } from "src/inventory/Entity/ingredient.entity";
 import { Order } from "src/order/Entity/order.entity";
+import { Invoice } from "src/inventory/Entity/invoice.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -27,5 +28,9 @@ export class User{
 
     @OneToMany((_type) => Dish, (dish) => dish.user)
     dishs: Dish[]
+
+    @OneToMany((_type) => Invoice, (invoice) => invoice.user)
+    invoices: Invoice[]
+
 
 }

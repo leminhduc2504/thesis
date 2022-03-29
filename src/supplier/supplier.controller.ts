@@ -14,19 +14,18 @@ export class SupplierController {
     ){}
 
     @Get()
-    async getIngredients(
+    async GetSupplier(
     @GetUser() user: User
     ): Promise<Supplier[]>{
         return this.supplierService.GetSuppliers(user)
     }
 
     @Post()
-    async createIngredient(
+    async CreateSupplier(
         @Body() createSupplierDto: CreateSupplierDto,
         @GetUser() user: User
         ): Promise<Supplier>{
         return this.supplierService.CreateSupplier(createSupplierDto,user)
     }
-
 
 }

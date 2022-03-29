@@ -58,4 +58,11 @@ export class DishService {
     async DeleteDish(id:string, user:User){
         return this.dishRepository.DeleteDish(id,user)
     }
+
+    async TakeIngredient(amount: number, dishId: string){
+        const dish =await this.GetDishById(dishId)
+        dish.dishIngredients.forEach(dishIngredient => {
+            this.inventoryService.TakeIngredient(amount*dishIngredient.amount, dishIngredient.ingredient.id)
+        })
+    }
 }

@@ -22,7 +22,7 @@ export class Dish{
     @OneToMany((_type) => DishIngredient, (dishIngredient) => dishIngredient.dish, {eager:true})
     dishIngredients: DishIngredient[]
 
-    @OneToMany((_type) => OrderDish, (orderDish) => orderDish.dish, {eager:true})
+    @OneToMany((_type) => OrderDish, (orderDish) => orderDish.dish)
     orderDishs: OrderDish[]
 
     // @ManyToOne((_type) => Order, order => order.dishs, {eager:false})

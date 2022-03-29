@@ -1,6 +1,7 @@
 import { Exclude } from "class-transformer";
 import { User } from "src/auth/user.entity";
 import { DishIngredient } from "src/dish/Enitity/dish-ingredient.entity";
+import { Invoice } from "src/inventory/Entity/invoice.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { AfterUpdate, Column, Entity, Exclusion, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -31,8 +32,6 @@ export class Ingredient{
     @OneToMany((_type) => DishIngredient, (dishIngredient) => dishIngredient.ingredient, {eager:false})
     dishIngredients: DishIngredient[]
 
-    @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:false})
-    supplier?: Supplier
 
     @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
     onDilivery: number
@@ -42,6 +41,12 @@ export class Ingredient{
 
     @Column()
     unit : IngredientUnit = IngredientUnit.kilogram
+
+    @OneToMany((_type) => Invoice, (invoice) => invoice.ingredient)
+    invoices: Invoice[]
+
+    @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:true} )
+    supplier: Supplier
 
 }
 

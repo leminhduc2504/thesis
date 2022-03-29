@@ -24,4 +24,9 @@ s
         await this.save(newOrderDish)
         return "success"
     }
+
+    async GetDishIdByOrderDishId(id: string): Promise<string>{
+        const found =await this.findOne(id)
+        return  found.dish.id
+    }
 }
