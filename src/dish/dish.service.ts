@@ -65,4 +65,6 @@ export class DishService {
             this.inventoryService.TakeIngredient(amount*dishIngredient.amount, dishIngredient.ingredient.id)
         })
     }
+
+    
 }

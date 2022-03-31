@@ -62,6 +62,11 @@ export class InventoryController {
     ): Promise<Invoice>{
         return this.inventoryService.CreateInvoice(createInvoiceDto,user)
     }
+
+    @Patch("invoice/accept/:id")
+    async AcceptInvoice(@Param('id') invoiceId: string,@GetUser() user: User){
+        return this.inventoryService.AcceptInvoice(invoiceId,user )
+    }
 }
     
 

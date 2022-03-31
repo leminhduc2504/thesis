@@ -20,7 +20,7 @@ export class Invoice{
     @Column({type: "decimal", precision: 6, scale: 2, nullable: true })
     invoicePrice: number
 
-    @ManyToOne((_type) => User, user => user.invoices, {onDelete: 'CASCADE' })
+    @ManyToOne((_type) => User, user => user.invoices, {onDelete: 'CASCADE',eager:false })
     user:User
 
     @Column()
@@ -29,10 +29,10 @@ export class Invoice{
     @Column({nullable: true})
     unit: IngredientUnit
 
-    @ManyToOne((_type) => Ingredient, ingredient => ingredient.invoices, {onDelete: 'SET NULL' })
+    @ManyToOne((_type) => Ingredient, ingredient => ingredient.invoices, {onDelete: 'SET NULL' ,eager:true})
     ingredient: Ingredient
 
-    @ManyToOne((_type) => Supplier, supplier => supplier.invoices, {onDelete: 'SET NULL' })
+    @ManyToOne((_type) => Supplier, supplier => supplier.invoices, {onDelete: 'SET NULL',eager:true })
     supplier: Supplier
 
     @BeforeInsert()

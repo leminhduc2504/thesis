@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
 import { User } from 'src/auth/user.entity';
 import { SupplierService } from 'src/supplier/supplier.service';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
@@ -20,7 +21,9 @@ export class InventoryService {
         @InjectRepository(InvoiceRepository)
         private invoiceRepository: InvoiceRepository,
 
-        private supplierService: SupplierService
+        private supplierService: SupplierService,
+
+        @InjectTwilio() private readonly client: TwilioClient
     ){}
 
     async GetIngredientsById(id: string): Promise<Ingredient>{
@@ -45,7 +48,7 @@ export class InventoryService {
     }
 
     async TakeIngredient(amount: number, ingredientId: string){
-        return await this.inventoryRepository.ChangeStock(ingredientId,amount)
+        return await this.inventoryRepository.TakeIngredient(ingredientId,amount)
     }
 
     async SetSupplier(ingredientId: string , supplierDto : {supplierId: string}, user:User){
@@ -69,4 +72,20 @@ export class InventoryService {
             ingredient.supplier, 
             user)
     }
+
+    async AcceptInvoice(invoiceId: string, user:User){
+        return this.invoiceRepository.AcceptInvoice(invoiceId, user)
+    }
+
+    async sendSMS() {
+        try {
+          return await this.client.messages.create({
+            body: 'SMS Body, sent to the phone!',
+            from: "+19892678221",
+            to: "+84392523079",
+          });
+        } catch (e) {
+          return e;
+        }
+      }
 }

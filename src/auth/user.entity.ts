@@ -5,6 +5,7 @@ import { Order } from "src/order/Entity/order.entity";
 import { Invoice } from "src/inventory/Entity/invoice.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Feedback } from "src/performance/Entity/feedback.entity";
 
 @Entity()
 export class User{
@@ -32,5 +33,7 @@ export class User{
     @OneToMany((_type) => Invoice, (invoice) => invoice.user)
     invoices: Invoice[]
 
+    @OneToMany((_type) => Feedback, (feedback) => feedback.user)
+    feedbacks: Feedback[]
 
 }
