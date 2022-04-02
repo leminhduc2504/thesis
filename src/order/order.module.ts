@@ -10,6 +10,7 @@ import { OrderDishRepository } from './order-dish.repository';
 @Module({
   imports: [TypeOrmModule.forFeature([OrderRepository,OrderDishRepository]),AuthModule,DishModule],
   providers: [OrderService],
-  controllers: [OrderController]
+  controllers: [OrderController],
+  exports:[OrderService]
 })
 export class OrderModule {}

@@ -2,13 +2,13 @@ import { ppid } from "process";
 import { User } from "src/auth/user.entity";
 import { Between, EntityRepository, MoreThan, Repository } from "typeorm";
 import { CreateFeedbackDto } from "../Dto/create-feedback-dto";
-import { FeedbackFilterDto } from "../Dto/get-filter-dto";
+import { DateFilterDto } from "../Dto/get-filter-dto";
 import { Feedback } from "../Entity/feedback.entity";
 
 @EntityRepository(Feedback)
 export class FeedbackRepository extends Repository<Feedback>{
 
-    async GetFeedback(filterDto:FeedbackFilterDto, user:User): Promise<Feedback[]>{
+    async GetFeedback(filterDto:DateFilterDto, user:User): Promise<Feedback[]>{
         const {start, end} = filterDto
         const query = this.createQueryBuilder('feedback')
         query.where({user})

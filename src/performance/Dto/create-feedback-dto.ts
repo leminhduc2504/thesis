@@ -1,4 +1,5 @@
 export class CreateFeedbackDto {
+    userId:string
     email: string
     overall: number 
     staff: number 

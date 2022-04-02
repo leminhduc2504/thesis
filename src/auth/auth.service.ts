@@ -5,6 +5,7 @@ import { UserRepository } from './user.repository';
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayLoad } from './jwt-payload.interface';
+import { User } from './user.entity';
 
 @Injectable()
 export class AuthService {
@@ -32,5 +33,8 @@ export class AuthService {
         }
     }
 
+    async GetUserById(id:string): Promise<User>{
+        return this.userRepository.GetUserById(id)
+    }
     
 }
