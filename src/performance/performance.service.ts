@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/auth/user.entity';
+import { DishService } from 'src/dish/dish.service';
 import { FilterGetOrderDto } from 'src/order/Dto/filter-get-order.dto';
 import { OrderService } from 'src/order/order.service';
 import { CreateFeedbackDto } from './Dto/create-feedback-dto';
 import { DateFilterDto } from './Dto/get-filter-dto';
 import { Feedback } from './Entity/feedback.entity';
 import { FeedbackRepository } from './Repository/feedback.repository';
+import { DishAnalysis, IngredientAnalysis, OrderAnalysis } from './Repository/order-analysis-.dto';
 
 @Injectable()
 export class PerformanceService {
@@ -19,6 +21,7 @@ export class PerformanceService {
         private feedbackRepository: FeedbackRepository,
 
         private orderService: OrderService,
+        private dishService: DishService,
         private authService: AuthService
 
         
@@ -35,15 +38,60 @@ export class PerformanceService {
         return this.feedbackRepository.GetFeedback(filterDto,user)
     }
 
-    async GetOrderPerformanceDaily(date: Date,user: User): Promise<Number>{
+    async GetOrderPerformanceDaily(date: DateFilterDto,user: User): Promise<OrderAnalysis>{
         const status = null 
-        const endDate = new Date(date.getTime() + (1000 * 60 * 60 * 24));
-        
-        const getOrderDto: FilterGetOrderDto = {status,start: date,end: endDate }
+        const {start} =date 
+        const startC = new Date(start)
+        const endDate = new Date(startC.getTime() + (1000 * 60 * 60 * 24));
+
+        const getOrderDto: FilterGetOrderDto = {status,start:startC,end: endDate }
         const orders =await this.orderService.GetOrders(getOrderDto,user)
-        return  orders.length
+        
+        const analysis : OrderAnalysis = new OrderAnalysis()
+        analysis.dishs = new Array<DishAnalysis>()
+        analysis.orderAmount = orders.length
+        analysis.ingredients = new Array<IngredientAnalysis>()
+        orders.forEach( (order) =>  {
+            analysis.retailPrice =+ analysis.retailPrice + +order.orderPrice
+            order.orderDishs.forEach(  (orderDish)=> {
+                const found = analysis.dishs.find( e => e.dish.id === orderDish.dish.id );
+                if (found){
+                    found.dishAmount += orderDish.amount
+                }
+                else{
+                    const newDishs = new DishAnalysis()
+                    newDishs.dish = orderDish.dish
+                    newDishs.dishAmount = orderDish.amount
+                    analysis.dishs.push(newDishs)
+                }
+            })
+        }) 
+        for (let i = 0; i <analysis.dishs.length; i++ ){
+            const dishIngredients = await this.dishService.GetDishIngredients(analysis.dishs[i].dish.id);
+            dishIngredients.forEach((dishIngredient) => {
+                const found = analysis.ingredients.find(e => e.ingredient.id === dishIngredient.ingredient.id);
+                if (found) {
+                    found.ingredientAmount =+found.ingredientAmount + +dishIngredient.amount*+analysis.dishs[i].dishAmount;
+                }
+                else {
+                    const newIngredients = new IngredientAnalysis()
+                    newIngredients.ingredient = dishIngredient.ingredient;
+                    newIngredients.ingredientAmount = +dishIngredient.amount*+analysis.dishs[i].dishAmount;
+                    analysis.ingredients.push(newIngredients);
+                }
+            });
+        }
+    
+        return  analysis
+    }
+    
+
+    async GetOrderPerformanceWeekly(date:Date, user: User){
+
     }
 
+    async GetOrderPerformanceMonthly(date:Date, user:User){
 
+    }
 
 }

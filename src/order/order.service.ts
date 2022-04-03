@@ -75,6 +75,10 @@ export class OrderService {
         return order
     }
 
+    async GetDishIdByOrderDishId(id:string):Promise<string>{
+        return this.orderDishRepository.GetDishIdByOrderDishId(id)
+    }
+
     GetTime():Date{
         const d = new Date();
         d.setHours(d.getHours() - d.getTimezoneOffset() / 60);

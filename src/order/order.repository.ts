@@ -13,7 +13,7 @@ export class OrderRepository extends Repository<Order>{
         // query.where({user})
         // const orders =await query.getMany()
 
-        const {status} = filter
+        const {status,start,end} = filter
         const query = this.createQueryBuilder('order')
         .leftJoinAndSelect("order.orderDishs","orderDishs")
         .leftJoinAndSelect("orderDishs.dish", "dish")
@@ -22,7 +22,10 @@ export class OrderRepository extends Repository<Order>{
         if(status){
             query.andWhere('order.status = :status',{status})
         }
-        
+        // console.log(start,end)
+        if(start && end){
+            query.andWhere('order.createdAt BETWEEN :start AND :end', {start , end});
+        }
         const orders = query.getMany()
         // if(!orders){
         //     throw new NotFoundException()

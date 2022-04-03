@@ -33,7 +33,7 @@ export class PerformanceController {
 
     //financial
 
-    @Get("financial") 
+
     // async GetRevenue(dateFilterDto: DateFilterDto, @GetUser() user: User ) {
     //     return this.performanceService.
     // }
@@ -46,7 +46,7 @@ export class PerformanceController {
     //order
     @Get("order")
     @UseGuards(AuthGuard())
-    async GetOrderPerformanceDaily(@Query() date: Date, @GetUser() user: User){
+    async GetOrderPerformanceDaily(@Query() date: DateFilterDto, @GetUser() user: User){
         return this.performanceService.GetOrderPerformanceDaily(date,user)
     }
 

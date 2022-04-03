@@ -2,19 +2,19 @@ import { Dish } from "src/dish/Enitity/dish.entity"
 import { Ingredient } from "src/inventory/Entity/ingredient.entity"
 
 export class OrderAnalysis{
-    amount: number
-    retailPrice: number
-    ingredientPrice: number
-    dishs : DishAnalysis[]
-    ingredients: IngredientAnalysis[]
+    orderAmount: number
+    retailPrice: number = 0.00
+    ingredientPrice: number = 0.00
+    dishs : DishAnalysis[] =  new Array<DishAnalysis>()
+    ingredients: IngredientAnalysis[] =  new Array<IngredientAnalysis>()
 }
 
 export class DishAnalysis{
-    dishId: string
-    amount: number
+    dish: Dish
+    dishAmount: number = 0
 }
 
 export class IngredientAnalysis{
-    ingredientId: string
-    amount: number
+    ingredient: Ingredient
+    ingredientAmount: number = 0
 }
