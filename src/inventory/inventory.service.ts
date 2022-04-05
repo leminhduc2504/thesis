@@ -6,9 +6,12 @@ import { SupplierService } from 'src/supplier/supplier.service';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
 import { CreateIngredientDto } from './Dto/create-ingredient.dto';
 import { CreateInvoiceDto } from './Dto/create-invoce.dto';
+import { CreateStockChangeHistoryDto } from './Dto/create-stockHistory.dto';
 import { GetIngredientsFilterDto } from './Dto/get-ingredients-filter-dto';
+import { StockChangeHistory } from './Entity/history-change.entity';
 import { Ingredient } from './Entity/ingredient.entity';
 import { Invoice } from './Entity/invoice.entity';
+import { StockChangeHistoryRepository } from './history-change.repository';
 import { IngredientRepository } from './ingredient.repository';
 import { InvoiceRepository } from './invoce.repository';
 
@@ -20,6 +23,9 @@ export class InventoryService {
 
         @InjectRepository(InvoiceRepository)
         private invoiceRepository: InvoiceRepository,
+
+        @InjectRepository(StockChangeHistoryRepository)
+        private stockChangeHistoryRepository: StockChangeHistoryRepository,
 
         private supplierService: SupplierService,
 
@@ -47,8 +53,8 @@ export class InventoryService {
         return this.inventoryRepository.ChangeThreshold(id,changeThresholdIngredientDto)
     }
 
-    async TakeIngredient(amount: number, ingredientId: string){
-        return await this.inventoryRepository.TakeIngredient(ingredientId,amount)
+    async ChangeIngredient(amount: number, ingredientId: string){
+        return await this.inventoryRepository.ChangeIngredient(ingredientId,amount)
     }
 
     async SetSupplier(ingredientId: string , supplierDto : {supplierId: string}, user:User){
@@ -74,13 +80,32 @@ export class InventoryService {
     }
 
     async AcceptInvoice(invoiceId: string, user:User){
-        return this.invoiceRepository.AcceptInvoice(invoiceId, user)
+        try{
+            this.invoiceRepository.AcceptInvoice(invoiceId, user)
+            const invoice =  await this.invoiceRepository.GetInvoiceById(invoiceId)
+            const note = "accept invoice"
+            const ingredient = invoice.ingredient
+            const amount = invoice.amount
+            const createDto: CreateStockChangeHistoryDto = {note,ingredient,amount}
+            this.CreateStockChange(createDto,user)
+        }
+        catch{
+            throw new BadRequestException()
+        }
+    }
+
+    async GetStockChangeHistory(user:User){
+        return this.stockChangeHistoryRepository.GetStockChangeHistory(user)
+    }
+
+    async CreateStockChange(createDto : CreateStockChangeHistoryDto,user:User){
+        return this.stockChangeHistoryRepository.CreateStockHistory(createDto,user)
     }
 
     async sendSMS() {
         try {
           return await this.client.messages.create({
-            body: 'SMS Body, sent to the phone!',
+            body: 'Your Ingredient Has Been Ordered',
             from: "+19892678221",
             to: "+84392523079",
           });

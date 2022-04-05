@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
+import { CreateStockChangeHistoryDto } from 'src/inventory/Dto/create-stockHistory.dto';
 import { InventoryService } from 'src/inventory/inventory.service';
 import { DishIngredientRepository } from './dish-ingredient.repository';
 import { DishRepository } from './dish.repository';
@@ -62,7 +63,10 @@ export class DishService {
     async TakeIngredient(amount: number, dishId: string){
         const dish =await this.GetDishById(dishId)
         dish.dishIngredients.forEach(dishIngredient => {
-            this.inventoryService.TakeIngredient(amount*dishIngredient.amount, dishIngredient.ingredient.id)
+            this.inventoryService.ChangeIngredient(amount*dishIngredient.amount, dishIngredient.ingredient.id)
+            const note = "cooking"
+            const createDto: CreateStockChangeHistoryDto = {note:"cooking",ingredient:dishIngredient.ingredient,amount:amount*dishIngredient.amount}
+            this.inventoryService.CreateStockChange(createDto,dish.user)
         })
     }
 

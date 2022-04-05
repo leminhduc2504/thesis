@@ -53,9 +53,9 @@ export class IngredientRepository extends Repository<Ingredient>{
         return ingredient
     }
 
-   async TakeIngredient(id:string, amount:number){
+   async ChangeIngredient(id:string, amount:number){
         const foundIngredient =await this.findOne(id)
-        foundIngredient.stock -= amount
+        foundIngredient.stock =+foundIngredient.stock + +amount
         if(foundIngredient.stock < amount){
             throw new BadRequestException("Insufficient Ingredient")
         }

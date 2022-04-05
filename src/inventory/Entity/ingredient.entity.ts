@@ -4,6 +4,7 @@ import { DishIngredient } from "src/dish/Enitity/dish-ingredient.entity";
 import { Invoice } from "src/inventory/Entity/invoice.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { AfterUpdate, Column, Entity, Exclusion, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { StockChangeHistory } from "./history-change.entity";
 
 @Entity()
 export class Ingredient{
@@ -44,6 +45,9 @@ export class Ingredient{
 
     @OneToMany((_type) => Invoice, (invoice) => invoice.ingredient)
     invoices: Invoice[]
+
+    @OneToMany((_type) => StockChangeHistory, (stockChangeHistory) => stockChangeHistory.ingredient)
+    stockChangeHistory: StockChangeHistory[]
 
     @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:true} )
     supplier: Supplier

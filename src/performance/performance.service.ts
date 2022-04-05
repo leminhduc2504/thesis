@@ -86,12 +86,12 @@ export class PerformanceService {
     }
     
 
-    async GetOrderPerformanceWeekly(date:Date, user: User){
+    // async GetOrderPerformanceWeekly(date:Date, user: User): Promise<OrderAnalysis[]>{
+    //     for(let i = 0 ; i)
+    // }
 
-    }
+    // async GetOrderPerformanceMonthly(date:Date, user:User): Promise<OrderAnalysis[]>{
 
-    async GetOrderPerformanceMonthly(date:Date, user:User){
-
-    }
+    // }
 
 }

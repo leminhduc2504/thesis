@@ -6,6 +6,7 @@ import { Invoice } from "src/inventory/Entity/invoice.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Feedback } from "src/performance/Entity/feedback.entity";
+import { StockChangeHistory } from "src/inventory/Entity/history-change.entity";
 
 @Entity()
 export class User{
@@ -32,6 +33,9 @@ export class User{
 
     @OneToMany((_type) => Invoice, (invoice) => invoice.user)
     invoices: Invoice[]
+
+    @OneToMany((_type) => StockChangeHistory, (stockChangeHistory) => stockChangeHistory.user)
+    stockChangeHistory: StockChangeHistory[]
 
     @OneToMany((_type) => Feedback, (feedback) => feedback.user)
     feedbacks: Feedback[]

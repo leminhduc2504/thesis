@@ -6,6 +6,7 @@ import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.
 import { CreateIngredientDto } from './Dto/create-ingredient.dto';
 import { CreateInvoiceDto } from './Dto/create-invoce.dto';
 import { GetIngredientsFilterDto } from './Dto/get-ingredients-filter-dto';
+import { StockChangeHistory } from './Entity/history-change.entity';
 import { Ingredient } from './Entity/ingredient.entity';
 import { Invoice } from './Entity/invoice.entity';
 import { InventoryService } from './inventory.service'
@@ -66,6 +67,11 @@ export class InventoryController {
     @Patch("invoice/accept/:id")
     async AcceptInvoice(@Param('id') invoiceId: string,@GetUser() user: User){
         return this.inventoryService.AcceptInvoice(invoiceId,user )
+    }
+
+    @Get("stock-change")
+    async GetStockChange(@GetUser() user: User): Promise<StockChangeHistory[]>{
+        return this.inventoryService.GetStockChangeHistory(user)
     }
 }
     
