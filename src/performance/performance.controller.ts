@@ -27,7 +27,6 @@ export class PerformanceController {
     @Get("feedback")
     @UseGuards(AuthGuard())
     async GetFeedback(@Query() filterDto:DateFilterDto, @GetUser() user: User): Promise<Feedback[]>{
-        
         return this.performanceService.GetFeedback(filterDto,user)
     }
 
