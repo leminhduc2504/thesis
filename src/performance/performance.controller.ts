@@ -5,6 +5,7 @@ import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { CreateFeedbackDto } from './Dto/create-feedback-dto';
 import { DateFilterDto } from './Dto/get-filter-dto';
+import { ReponseFeedbackDto } from './Dto/reponse-feedback-dto';
 import { Feedback } from './Entity/feedback.entity';
 import { PerformanceService } from './performance.service';
 
@@ -26,7 +27,7 @@ export class PerformanceController {
 
     @Get("feedback")
     @UseGuards(AuthGuard())
-    async GetFeedback(@Query() filterDto:DateFilterDto, @GetUser() user: User): Promise<Feedback[]>{
+    async GetFeedback(@Query() filterDto:DateFilterDto, @GetUser() user: User): Promise<ReponseFeedbackDto>{
         return this.performanceService.GetFeedback(filterDto,user)
     }
 

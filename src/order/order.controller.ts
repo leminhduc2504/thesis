@@ -22,6 +22,13 @@ export class OrderController {
         return this.orderService.GetOrders(filter,user)
     }
 
+    @Get("/:id")
+    async GetOrderById(
+        @Param('id') orderId: number,
+        @GetUser() user: User
+    ){
+        return this.orderService.GetOrderById(orderId,user);
+    }
     @Post()
     async createOrder(
         @GetUser() user: User,

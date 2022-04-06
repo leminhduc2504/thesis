@@ -7,6 +7,7 @@ import { FilterGetOrderDto } from 'src/order/Dto/filter-get-order.dto';
 import { OrderService } from 'src/order/order.service';
 import { CreateFeedbackDto } from './Dto/create-feedback-dto';
 import { DateFilterDto } from './Dto/get-filter-dto';
+import { ReponseFeedbackDto } from './Dto/reponse-feedback-dto';
 import { Feedback } from './Entity/feedback.entity';
 import { FeedbackRepository } from './Repository/feedback.repository';
 import { DishAnalysis, IngredientAnalysis, OrderAnalysis } from './Repository/order-analysis-.dto';
@@ -34,7 +35,7 @@ export class PerformanceService {
         return this.feedbackRepository.CreateFeedback(createFeedbackDto,user)
     }
 
-    async GetFeedback(filterDto:DateFilterDto, user: User): Promise<Feedback[]>{
+    async GetFeedback(filterDto:DateFilterDto, user: User): Promise<ReponseFeedbackDto>{
         return this.feedbackRepository.GetFeedback(filterDto,user)
     }
 
