@@ -48,6 +48,20 @@ export class FeedbackRepository extends Repository<Feedback>{
         return reponse;
     }
 
+    async GetFeedbackList(filterDto:DateFilterDto, user:User): Promise<Feedback[]>{
+        const {start, end} = filterDto
+        const query = this.createQueryBuilder('feedback')
+        query.where({user})
+        // const startC = new Date(start)
+        // const endC = new Date(end)
+
+        if(start && end){
+            query.andWhere('feedback.createdAt BETWEEN :start AND :end', {start , end});
+        }
+        const feedbacks =await query.getMany()
+        return feedbacks
+    }
+
     async CreateFeedback( createFeedbackDto: CreateFeedbackDto,user:User): Promise<Feedback>{
         const {email, overall, staff, cleanliness, facilities, valueForMoney, appetite, serviceTime } = createFeedbackDto
         const newFeedback = this.create( {user, email, overall, staff, cleanliness, facilities, valueForMoney, appetite, serviceTime })

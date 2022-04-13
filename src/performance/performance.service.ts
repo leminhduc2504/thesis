@@ -39,6 +39,10 @@ export class PerformanceService {
         return this.feedbackRepository.GetFeedback(filterDto,user)
     }
 
+    async GetFeedbackList(filterDto:DateFilterDto, user: User): Promise<Feedback[]>{
+        return this.feedbackRepository.GetFeedbackList(filterDto,user)
+    }
+
     async GetOrderPerformanceDaily(date: DateFilterDto,user: User): Promise<OrderAnalysis>{
         const status = null 
         const {start} =date 
