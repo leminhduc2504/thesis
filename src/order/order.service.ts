@@ -65,7 +65,7 @@ export class OrderService {
         order.orderDishs.forEach( async (orderDish) => {
             console.log(orderDish)
             const dishId = await this.orderDishRepository.GetDishIdByOrderDishId(orderDish.orderDishId)
-            this.dishService.TakeIngredient(orderDish.amount,dishId)
+            this.dishService.TakeIngredient(orderDish.amount,dishId,user)
         })
 
         order.status = OrderStatus.finished

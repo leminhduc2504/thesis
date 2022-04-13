@@ -60,13 +60,13 @@ export class DishService {
         return this.dishRepository.DeleteDish(id,user)
     }
 
-    async TakeIngredient(amount: number, dishId: string){
+    async TakeIngredient(amount: number, dishId: string, user:User){
         const dish =await this.GetDishById(dishId)
         dish.dishIngredients.forEach(dishIngredient => {
             this.inventoryService.ChangeIngredient(amount*dishIngredient.amount, dishIngredient.ingredient.id)
             const note = "cooking"
             const createDto: CreateStockChangeHistoryDto = {note:"cooking",ingredient:dishIngredient.ingredient,amount:amount*dishIngredient.amount}
-            this.inventoryService.CreateStockChange(createDto,dish.user)
+            this.inventoryService.CreateStockChange(createDto,user)
         })
     }
 
