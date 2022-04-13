@@ -46,7 +46,7 @@ export class Ingredient{
     @OneToMany((_type) => Invoice, (invoice) => invoice.ingredient)
     invoices: Invoice[]
 
-    @OneToMany((_type) => StockChangeHistory, (stockChangeHistory) => stockChangeHistory.ingredient)
+    @OneToMany((_type) => StockChangeHistory, (stockChangeHistory) => stockChangeHistory.ingredient, {eager:false})
     stockChangeHistory: StockChangeHistory[]
 
     @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:true} )
