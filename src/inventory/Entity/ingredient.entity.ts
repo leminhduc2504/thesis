@@ -38,7 +38,7 @@ export class Ingredient{
     onDilivery: number
 
     @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
-    autoOrderAmount: number
+    autoRefillAmount: number
 
     @Column()
     unit : IngredientUnit = IngredientUnit.kilogram
@@ -52,9 +52,17 @@ export class Ingredient{
     @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:true} )
     supplier: Supplier
 
+    @Column({nullable: true})
+    autoRefillStatus: AutoRefillStatus = AutoRefillStatus.off
+
 }
 
 export const enum IngredientUnit{
     kilogram = "kg",
     piece = "piece",
+}
+
+export const enum AutoRefillStatus {
+    on = "ON",
+    off = "OFF"
 }

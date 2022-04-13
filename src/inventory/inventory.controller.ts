@@ -69,6 +69,11 @@ export class InventoryController {
         return this.inventoryService.AcceptInvoice(invoiceId,user )
     }
 
+    // @Patch("ingredient/turnon-autorefill/:id")
+    // async TurnOnAutoRefill(@Param('id') ingreidentId: string,@GetUser() user: User){
+    //     return this.inventoryService.TurnOnAutoRefill(ingreidentId,user)
+    // }
+
     @Get("stock-change")
     async GetStockChange(@GetUser() user: User): Promise<StockChangeHistory[]>{
         return this.inventoryService.GetStockChangeHistory(user)

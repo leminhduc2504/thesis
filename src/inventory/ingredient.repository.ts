@@ -2,10 +2,11 @@ import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { User } from "src/auth/user.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { EntityRepository, Repository } from "typeorm";
+import { isBuffer } from "util";
 import { ChangeThresholdIngredientDto } from "./Dto/change-threshold-ingredient.dto";
 import { CreateIngredientDto } from "./Dto/create-ingredient.dto";
 import { GetIngredientsFilterDto } from "./Dto/get-ingredients-filter-dto";
-import { Ingredient } from "./Entity/ingredient.entity";
+import { AutoRefillStatus, Ingredient } from "./Entity/ingredient.entity";
 
 @EntityRepository(Ingredient)
 export class IngredientRepository extends Repository<Ingredient>{
@@ -53,24 +54,44 @@ export class IngredientRepository extends Repository<Ingredient>{
         return ingredient
     }
 
-   async ChangeIngredient(id:string, amount:number){
+    async ChangeIngredient(id:string, amount:number){
         const foundIngredient =await this.findOne(id)
         foundIngredient.stock =+foundIngredient.stock + +amount
         if(foundIngredient.stock < amount){
             throw new BadRequestException("Insufficient Ingredient")
         }
         await this.save(foundIngredient)
-   }
+    }
 
-   async SupplyIngredient(id:string ,amount: number ){
-    const foundIngredient =await this.findOne(id)
-    foundIngredient.stock += amount
-    await this.save(foundIngredient)
-   }
+    async SupplyIngredient(id:string ,amount: number ){
+        const foundIngredient =await this.findOne(id)
+        foundIngredient.stock += amount
+        await this.save(foundIngredient)
+    }
 
-   async SetSupplier(id: string, supplier: Supplier, user: User){
+    async SetSupplier(id: string, supplier: Supplier, user: User){
        const foundIngredient = await this.findOne(id)
        foundIngredient.supplier = supplier
        await this.save(foundIngredient)
-   }
+    }
+
+    async SetAutoRefill(id: string , amount :number , threshold : number, user: User) {
+        const ingredient  = await this.findOne({user,id})
+        if(!ingredient){
+            throw new NotFoundException("Not found ingredient")
+        }
+        ingredient.lowThreshold = threshold
+        ingredient.autoRefillAmount = amount
+        ingredient.autoRefillStatus = AutoRefillStatus.on
+        await this.save(ingredient)
+    }
+
+    async ChangeAutorefillStatus(id: string, user: User){
+        const ingredient  = await this.findOne({user,id})
+        if ( ingredient.autoRefillAmount === null || ingredient.lowThreshold === null){
+            throw new BadRequestException("Please set threshold and refill amount")
+        }
+        ingredient.autoRefillStatus = AutoRefillStatus.on
+        await this.save(ingredient)
+    }
 }

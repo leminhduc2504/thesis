@@ -83,9 +83,12 @@ export class InventoryService {
         try{
             this.invoiceRepository.AcceptInvoice(invoiceId, user)
             const invoice =  await this.invoiceRepository.GetInvoiceById(invoiceId)
+
+            
             const note = "accept invoice"
             const ingredient = invoice.ingredient
             const amount = invoice.amount
+            await this.ChangeIngredient(amount,ingredient.id)
             const createDto: CreateStockChangeHistoryDto = {note,ingredient,amount}
             this.CreateStockChange(createDto,user)
         }
@@ -112,5 +115,18 @@ export class InventoryService {
         } catch (e) {
           return e;
         }
-      }
+    }
+
+    // async AutoRefill(amount: number, ingredientId: string){
+    //     const ingredient = this.inventoryRepository.GetIngredientById(ingredientId)
+    // }
+
+    // async SetAutoRefill(ingredientId: string, amount: number, threshold: number, user: User){
+    //     return this.inventoryRepository.SetAutoRefill(ingredientId,amount,threshold,user)
+    // }
+
+    // async TurnOnAutoRefill(ingredientId: string, user: User){
+    //     return this.inventoryRepository.TurnOnAutoRefill(ingredientId,user)
+    // }
+    
 }

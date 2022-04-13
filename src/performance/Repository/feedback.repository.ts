@@ -25,25 +25,25 @@ export class FeedbackRepository extends Repository<Feedback>{
         reponse.overall = new FeedbackOverall()
         reponse.feedbacks = feedbacks
         reponse.amount = feedbacks.length
-        const total:Feedback = feedbacks.reduce((pre,cur)=>{
-            cur.appetite += pre.appetite
-            cur.overall += pre.overall
-            cur.cleanliness += pre.cleanliness
-            cur.facilities += pre.facilities
-            cur.serviceTime += pre.serviceTime
-            cur.valueForMoney += pre.valueForMoney
-            cur.staff += pre.staff
-            return cur
+        feedbacks.forEach(ele => {
+            reponse.overall.overall += ele.overall
+            reponse.overall.appetite += ele.appetite
+            reponse.overall.cleanliness += ele.cleanliness
+            reponse.overall.facilities +=ele.facilities
+            reponse.overall.serviceTime += ele.serviceTime
+            reponse.overall.staff += ele.staff
+            reponse.overall.valueForMoney += ele.valueForMoney
         })
-        console.log(total)
-
-        reponse.overall.overall = total.overall/reponse.amount
-        reponse.overall.appetite = total.appetite/reponse.amount
-        reponse.overall.cleanliness =  total.cleanliness/reponse.amount
-        reponse.overall.facilities = total.facilities/reponse.amount
-        reponse.overall.serviceTime= total.serviceTime/reponse.amount
-        reponse.overall.staff = total.staff/reponse.amount
-        reponse.overall.valueForMoney = total.valueForMoney/reponse.amount
+        
+        // console.log(total)
+        
+        reponse.overall.overall = reponse.overall.overall/reponse.amount
+        reponse.overall.appetite = reponse.overall.appetite/reponse.amount
+        reponse.overall.cleanliness =  reponse.overall.cleanliness/reponse.amount
+        reponse.overall.facilities = reponse.overall.facilities/reponse.amount
+        reponse.overall.serviceTime= reponse.overall.serviceTime/reponse.amount
+        reponse.overall.staff = reponse.overall.staff/reponse.amount
+        reponse.overall.valueForMoney = reponse.overall.valueForMoney/reponse.amount
 
         return reponse;
     }
