@@ -4,6 +4,7 @@ import { User } from 'src/auth/user.entity';
 import { DishService } from 'src/dish/dish.service';
 import { CreateOrderDto, DishInfo } from './Dto/create-order.dto';
 import { FilterGetOrderDto } from './Dto/filter-get-order.dto';
+import { OrderDish } from './Entity/order-dish.entity';
 import { Order, OrderStatus } from './Entity/order.entity';
 import { OrderDishRepository } from './order-dish.repository';
 import { OrderRepository } from './order.repository';
@@ -26,6 +27,10 @@ export class OrderService {
 
     async GetOrderById(id:number,user: User): Promise<Order>{
         return this.orderRepository.GetOrderById(id,user)
+    }
+
+    async GetOrderDishById(id:number,user: User): Promise<OrderDish[]>{
+        return this.orderRepository.GetOrderDishById(id,user)
     }
 
     async CreateListOrderDish(dishInfos: DishInfo[], order:Order){

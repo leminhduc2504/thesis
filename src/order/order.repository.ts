@@ -2,6 +2,7 @@ import { NotFoundException } from "@nestjs/common";
 import { User } from "src/auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { FilterGetOrderDto } from "./Dto/filter-get-order.dto";
+import { OrderDish } from "./Entity/order-dish.entity";
 import { Order, OrderStatus } from "./Entity/order.entity";
 
 @EntityRepository(Order)
@@ -40,6 +41,15 @@ export class OrderRepository extends Repository<Order>{
             throw new NotFoundException()
         }
         return foundOrder;
+    }
+
+    async GetOrderDishById(orderId:number ,user: User): Promise<OrderDish[]>{
+    
+        const foundOrder = await this.findOne({where:{orderId,user}})
+        if(!foundOrder){
+            throw new NotFoundException()
+        }
+        return foundOrder.orderDishs;
     }
 
     async CreateOrder(orderPrice: number ,user: User): Promise<Order>{
