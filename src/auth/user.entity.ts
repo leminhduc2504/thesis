@@ -7,6 +7,8 @@ import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Feedback } from "src/performance/Entity/feedback.entity";
 import { StockChangeHistory } from "src/inventory/Entity/history-change.entity";
+import { DishCategory } from "src/dish/Enitity/dish-category.entity";
+import { IngredientCategory } from "src/inventory/Entity/ingredient-category.entity";
 
 @Entity()
 export class User{
@@ -39,5 +41,11 @@ export class User{
 
     @OneToMany((_type) => Feedback, (feedback) => feedback.user)
     feedbacks: Feedback[]
+
+    @OneToMany((_type) => DishCategory, (dishCategory) => dishCategory.user)
+    dishCategories: DishCategory[]
+
+    @OneToMany((_type) => IngredientCategory, (ingredientCategory) => ingredientCategory.user)
+    ingredientCategories: IngredientCategory[]
 
 }

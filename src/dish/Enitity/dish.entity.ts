@@ -1,8 +1,7 @@
-import { Exclude } from "class-transformer";
 import { User } from "src/auth/user.entity";
 import { OrderDish } from "src/order/Entity/order-dish.entity";
-import { Order } from "src/order/Entity/order.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { DishCategory } from "./dish-category.entity";
 import { DishIngredient } from "./dish-ingredient.entity";
 
 @Entity()
@@ -25,9 +24,11 @@ export class Dish{
     @OneToMany((_type) => OrderDish, (orderDish) => orderDish.dish)
     orderDishs: OrderDish[]
 
-    // @ManyToOne((_type) => Order, order => order.dishs, {eager:false})
-    // order:Order
-
     @ManyToOne((_type) => User, user => user.dishs, {eager:false,onDelete: 'CASCADE'})
     user:User
+
+    @ManyToOne((_type) => DishCategory, (dishCategory) => dishCategory.dishs,{onDelete: 'SET NULL'})
+    dishCategory: DishCategory
+
+
 }

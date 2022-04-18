@@ -3,8 +3,9 @@ import { User } from "src/auth/user.entity";
 import { DishIngredient } from "src/dish/Enitity/dish-ingredient.entity";
 import { Invoice } from "src/inventory/Entity/invoice.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
-import { AfterUpdate, Column, Entity, Exclusion, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AfterUpdate, Column, Entity, Exclusion, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { StockChangeHistory } from "./history-change.entity";
+import { IngredientCategory } from "./ingredient-category.entity";
 
 @Entity()
 export class Ingredient{
@@ -54,6 +55,9 @@ export class Ingredient{
 
     @Column({nullable: true})
     autoRefillStatus: AutoRefillStatus = AutoRefillStatus.off
+
+    @ManyToOne((_type) => IngredientCategory, (ingredientCategory) => ingredientCategory.ingredients, {onDelete:'SET NULL'})
+    ingredientCategory: IngredientCategory
 
 }
 

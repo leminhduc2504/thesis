@@ -1,8 +1,7 @@
-import { User } from "src/auth/user.entity";
 import { Ingredient } from "src/inventory/Entity/ingredient.entity";
 import { EntityRepository, Repository } from "typeorm";
-import { DishIngredient } from "./Enitity/dish-ingredient.entity";
-import { Dish } from "./Enitity/dish.entity";
+import { DishIngredient } from "../Enitity/dish-ingredient.entity";
+import { Dish } from "../Enitity/dish.entity";
 
 @EntityRepository(DishIngredient)
 export class DishIngredientRepository extends Repository<DishIngredient>{

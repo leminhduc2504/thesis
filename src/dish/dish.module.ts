@@ -3,13 +3,14 @@ import { DishService } from './dish.service';
 import { DishController } from './dish.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { DishRepository } from './dish.repository';
-import { DishIngredientRepository } from './dish-ingredient.repository';
+import { DishRepository } from './repository/dish.repository';
+import { DishIngredientRepository } from './repository/dish-ingredient.repository';
 import { InventoryModule } from 'src/inventory/inventory.module';
-import { InventoryService } from 'src/inventory/inventory.service';
+import { DishCategoryRepository } from './repository/dish-category-repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DishRepository,DishIngredientRepository]),AuthModule,InventoryModule],
+  imports: [TypeOrmModule.forFeature([DishRepository,DishIngredientRepository,DishCategoryRepository]),
+  AuthModule,InventoryModule],
   providers: [DishService],
   controllers: [DishController],
   exports:[DishService]

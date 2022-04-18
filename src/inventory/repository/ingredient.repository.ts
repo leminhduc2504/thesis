@@ -2,11 +2,11 @@ import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { User } from "src/auth/user.entity";
 import { Supplier } from "src/supplier/Entity/supplier.entity";
 import { EntityRepository, Repository } from "typeorm";
-import { isBuffer } from "util";
-import { ChangeThresholdIngredientDto } from "./Dto/change-threshold-ingredient.dto";
-import { CreateIngredientDto } from "./Dto/create-ingredient.dto";
-import { GetIngredientsFilterDto } from "./Dto/get-ingredients-filter-dto";
-import { AutoRefillStatus, Ingredient } from "./Entity/ingredient.entity";
+import { ChangeThresholdIngredientDto } from "../Dto/change-threshold-ingredient.dto";
+import { CreateIngredientDto } from "../Dto/create-ingredient.dto";
+import { GetIngredientsFilterDto } from "../Dto/get-ingredients-filter-dto";
+import { IngredientCategory } from "../Entity/ingredient-category.entity";
+import { AutoRefillStatus, Ingredient } from "../Entity/ingredient.entity";
 
 @EntityRepository(Ingredient)
 export class IngredientRepository extends Repository<Ingredient>{
@@ -17,7 +17,7 @@ export class IngredientRepository extends Repository<Ingredient>{
         query.where({user})
         if(search){
             query.andWhere(
-                'ingredient.name LIKE :search', {search: `%${search}%`}
+                'ingredient.name = :search', {search: `%${search}%`}
             )
         }
         const ingredients =await query.getMany()
@@ -92,6 +92,12 @@ export class IngredientRepository extends Repository<Ingredient>{
             throw new BadRequestException("Please set threshold and refill amount")
         }
         ingredient.autoRefillStatus = AutoRefillStatus.on
+        await this.save(ingredient)
+    }
+
+    async AssignCategory(ingredientId:string, category: IngredientCategory ){
+        const ingredient = await this.GetIngredientById(ingredientId)
+        ingredient.ingredientCategory =category
         await this.save(ingredient)
     }
 }

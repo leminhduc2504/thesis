@@ -2,18 +2,20 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
 import { User } from 'src/auth/user.entity';
+import { CreateDishCategoryDto } from 'src/dish/Dto/create-dish-category.dto';
 import { SupplierService } from 'src/supplier/supplier.service';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
 import { CreateIngredientDto } from './Dto/create-ingredient.dto';
 import { CreateInvoiceDto } from './Dto/create-invoce.dto';
 import { CreateStockChangeHistoryDto } from './Dto/create-stockHistory.dto';
 import { GetIngredientsFilterDto } from './Dto/get-ingredients-filter-dto';
-import { StockChangeHistory } from './Entity/history-change.entity';
+import { IngredientCategory } from './Entity/ingredient-category.entity';
 import { Ingredient } from './Entity/ingredient.entity';
 import { Invoice } from './Entity/invoice.entity';
-import { StockChangeHistoryRepository } from './history-change.repository';
-import { IngredientRepository } from './ingredient.repository';
-import { InvoiceRepository } from './invoce.repository';
+import { StockChangeHistoryRepository } from './repository/history-change.repository';
+import { IngredientCategoryRepository } from './repository/ingredient-category.repository';
+import { IngredientRepository } from './repository/ingredient.repository';
+import { InvoiceRepository } from './repository/invoce.repository';
 
 @Injectable()
 export class InventoryService {
@@ -26,6 +28,9 @@ export class InventoryService {
 
         @InjectRepository(StockChangeHistoryRepository)
         private stockChangeHistoryRepository: StockChangeHistoryRepository,
+
+        @InjectRepository(IngredientCategoryRepository)
+        private ingredientCategoryRepository: IngredientCategoryRepository,
 
         private supplierService: SupplierService,
 
@@ -128,5 +133,20 @@ export class InventoryService {
     // async TurnOnAutoRefill(ingredientId: string, user: User){
     //     return this.inventoryRepository.TurnOnAutoRefill(ingredientId,user)
     // }
+    
+    async CreateCategory(createDishCategoryDto:CreateDishCategoryDto,user: User){
+        const {categoryName} =createDishCategoryDto
+        
+        return this.ingredientCategoryRepository.CreateIngredientCategory(categoryName,user)
+    }
+
+    async AssignCategory(categoryId:string, ingredientId:string){
+        const category =await this.ingredientCategoryRepository.GetCategoryById(categoryId)
+        return this.inventoryRepository.AssignCategory(ingredientId,category)
+    }
+
+    async GetCategory(user:User): Promise<IngredientCategory[]>{
+        return this.ingredientCategoryRepository.GetAllCategory(user)
+    }
     
 }

@@ -27,6 +27,7 @@ export class OrderRepository extends Repository<Order>{
         if(start && end){
             query.andWhere('order.createdAt BETWEEN :start AND :end', {start , end});
         }
+        query.orderBy("createdAt", "DESC")
         const orders = query.getMany()
         // if(!orders){
         //     throw new NotFoundException()

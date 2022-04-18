@@ -2,15 +2,20 @@ import { Module } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { InventoryController } from './inventory.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { IngredientRepository } from './ingredient.repository';
+import { IngredientRepository } from './repository/ingredient.repository';
 import { AuthModule } from 'src/auth/auth.module';
 import { SupplierModule } from 'src/supplier/supplier.module';
-import { InvoiceRepository } from './invoce.repository';
-import { StockChangeHistoryRepository } from './history-change.repository';
+import { InvoiceRepository } from './repository/invoce.repository';
+import { StockChangeHistoryRepository } from './repository/history-change.repository';
+import { IngredientCategory } from './Entity/ingredient-category.entity';
+import { IngredientCategoryRepository } from './repository/ingredient-category.repository';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([IngredientRepository,InvoiceRepository,StockChangeHistoryRepository])
+  imports: [TypeOrmModule.forFeature([IngredientRepository,
+    InvoiceRepository,
+    StockChangeHistoryRepository,
+    IngredientCategoryRepository])
   ,AuthModule,SupplierModule],
   providers: [InventoryService],
   controllers: [InventoryController],

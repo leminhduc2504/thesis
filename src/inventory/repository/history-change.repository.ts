@@ -1,8 +1,7 @@
-import { constants } from "buffer";
 import { User } from "src/auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
-import { CreateStockChangeHistoryDto } from "./Dto/create-stockHistory.dto";
-import { StockChangeHistory } from "./Entity/history-change.entity";
+import { CreateStockChangeHistoryDto } from "../Dto/create-stockHistory.dto";
+import { StockChangeHistory } from "../Entity/history-change.entity";
 
 @EntityRepository(StockChangeHistory)
 export class StockChangeHistoryRepository extends Repository<StockChangeHistory>{

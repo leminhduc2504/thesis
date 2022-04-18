@@ -1,9 +1,9 @@
 import { User } from "src/auth/user.entity";
 import { Ingredient } from "src/inventory/Entity/ingredient.entity";
 import { EntityRepository, Repository } from "typeorm";
-import { CreateInvoiceDto } from "./Dto/create-invoce.dto";
-import { Invoice, InvoiceStatus } from "./Entity/invoice.entity";
-import { Supplier } from "../supplier/Entity/supplier.entity";
+import { CreateInvoiceDto } from "../Dto/create-invoce.dto";
+import { Invoice, InvoiceStatus } from "../Entity/invoice.entity";
+import { Supplier } from "../../supplier/Entity/supplier.entity";
 import { NotFoundException } from "@nestjs/common";
 
 @EntityRepository(Invoice)

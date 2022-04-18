@@ -3,11 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { CreateStockChangeHistoryDto } from 'src/inventory/Dto/create-stockHistory.dto';
 import { InventoryService } from 'src/inventory/inventory.service';
-import { DishIngredientRepository } from './dish-ingredient.repository';
-import { DishRepository } from './dish.repository';
+import { DishIngredientRepository } from './repository/dish-ingredient.repository';
+import { DishRepository } from './repository/dish.repository';
 import { CreateDishDto, DishIngredientInfo } from './Dto/create_dish.dto';
 import { DishIngredient } from './Enitity/dish-ingredient.entity';
 import { Dish } from './Enitity/dish.entity';
+import { DishCategory } from './Enitity/dish-category.entity';
+import { DishCategoryRepository } from './repository/dish-category-repository';
+import { CreateDishCategoryDto } from './Dto/create-dish-category.dto';
+import { QuerryFilterDishDto } from './Dto/qurry-dish-filter.dto';
 
 @Injectable()
 export class DishService {
@@ -18,12 +22,16 @@ export class DishService {
         @InjectRepository(DishIngredientRepository)
         private dishIngredientRepository: DishIngredientRepository,
 
+        @InjectRepository(DishCategoryRepository)
+        private dishCategoryRepository: DishCategoryRepository,
+
         private inventoryService: InventoryService,
         
     ){}
 
-    async GetDishs( user: User): Promise<Dish[]>{
-        return this.dishRepository.getDishs(user)
+    async GetDishs(filterDto:QuerryFilterDishDto, user: User): Promise<Dish[]>{
+        const {categoryName} = filterDto
+        return this.dishRepository.getDishs(categoryName,user)
     }
     
     async GetDishById(id: string): Promise<Dish>{
@@ -70,5 +78,19 @@ export class DishService {
         })
     }
 
+    async CreateCategory(createDishCategoryDto:CreateDishCategoryDto,user: User){
+        const {categoryName} =createDishCategoryDto
+        
+        return this.dishCategoryRepository.CreateDishCategory(categoryName,user)
+    }
+
+    async AssignCategory(categoryId:string, dishId:string){
+        const category =await this.dishCategoryRepository.GetCategoryById(categoryId)
+        return this.dishRepository.AssignCategory(dishId,category)
+    }
+
+    async GetCategory(user:User): Promise<DishCategory[]>{
+        return this.dishCategoryRepository.GetAllCategory(user)
+    }
     
 }

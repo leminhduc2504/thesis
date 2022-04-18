@@ -4,9 +4,11 @@ import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
 import { CreateIngredientDto } from './Dto/create-ingredient.dto';
+import { CreateIngredientCategoryDto } from './Dto/create-ingredientCategory.dto';
 import { CreateInvoiceDto } from './Dto/create-invoce.dto';
 import { GetIngredientsFilterDto } from './Dto/get-ingredients-filter-dto';
 import { StockChangeHistory } from './Entity/history-change.entity';
+import { IngredientCategory } from './Entity/ingredient-category.entity';
 import { Ingredient } from './Entity/ingredient.entity';
 import { Invoice } from './Entity/invoice.entity';
 import { InventoryService } from './inventory.service'
@@ -77,6 +79,29 @@ export class InventoryController {
     @Get("stock-change")
     async GetStockChange(@GetUser() user: User): Promise<StockChangeHistory[]>{
         return this.inventoryService.GetStockChangeHistory(user)
+    }
+
+    @Post('/category')
+    async CreateCategory(
+        @Body() createDishCateDto: CreateIngredientCategoryDto,
+        @GetUser() user: User
+        ){
+        return this.inventoryService.CreateCategory(createDishCateDto,user)
+    }
+
+    @Patch('/category/:categoryId/:dishId')
+    async AssignDishCategory(
+        @Param('categoryId') categoryId: string,
+        @Param('dishId') dishId: string,
+    ){
+        
+        return this.inventoryService.AssignCategory(categoryId,dishId)
+    }
+
+    @Get('/category/get')
+    async GetCategory(@GetUser() user: User):Promise<IngredientCategory[]>
+    {
+        return this.inventoryService.GetCategory(user)
     }
 }
     

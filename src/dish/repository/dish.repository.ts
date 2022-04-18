@@ -1,26 +1,26 @@
 import { NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
-import { CreateDishDto } from "./Dto/create_dish.dto";
-import { Dish } from "./Enitity/dish.entity";
+import { DishCategory } from "../Enitity/dish-category.entity";
+import { Dish } from "../Enitity/dish.entity";
 
 @EntityRepository(Dish)
 export class DishRepository extends Repository<Dish>{
     
 
-    async getDishs(user: User): Promise<Dish[]>{
+    async getDishs(categoryName: string , user: User): Promise<Dish[]>{
 
         const query = this.createQueryBuilder('dish')
         query.where({user})
         .leftJoinAndSelect("dish.dishIngredients","dishIngredients")
         .leftJoinAndSelect("dishIngredients.ingredient", "ingredient")
-    
-        // if(search){
-        //     query.andWhere(
-        //         'ingredient.name LIKE :search', {search: `%${search}%`}
-        //     )
-        // }
+        .leftJoinAndSelect("dish.dishCategory","dishCategory")
+
+        if(categoryName){
+            query.andWhere(
+                'dishCategory.name = :categoryName', {categoryName}
+            )
+        }
         const dishs =await query.getMany()
         return dishs;
     }
@@ -49,5 +49,11 @@ export class DishRepository extends Repository<Dish>{
 
     async DeleteDish(id: string,user:User){
         const deletedDish = await this.delete({id,user})
+    }
+
+    async AssignCategory(dishId:string, category: DishCategory ){
+        const dish = await this.GetDishById(dishId)
+        dish.dishCategory =category
+        await this.save(dish)
     }
 }
