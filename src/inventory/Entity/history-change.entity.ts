@@ -19,6 +19,6 @@ export class StockChangeHistory{
     @ManyToOne((_type) => User, user => user.stockChangeHistory, {eager:false})
     user:User
 
-    @Column()
+    @Column({type: "decimal", precision: 5, scale: 2, nullable: true })
     amount: number
 }

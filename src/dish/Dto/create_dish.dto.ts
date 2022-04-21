@@ -4,6 +4,8 @@ export class CreateDishDto {
 
     retailPrice: number
 
+    estimatedCookingTime: string
+
     ingredientPrice: number
 
     ingredientInfos!: DishIngredientInfo[]

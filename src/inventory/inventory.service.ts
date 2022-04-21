@@ -1,9 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConsoleLogger, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
 import { User } from 'src/auth/user.entity';
 import { CreateDishCategoryDto } from 'src/dish/Dto/create-dish-category.dto';
 import { SupplierService } from 'src/supplier/supplier.service';
+import { NumberResource } from 'twilio/lib/rest/pricing/v2/number';
+import { ChangeIngredientDto } from './Dto/change-ingredient.dto';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
 import { CreateIngredientDto } from './Dto/create-ingredient.dto';
 import { CreateInvoiceDto } from './Dto/create-invoce.dto';
@@ -58,8 +60,12 @@ export class InventoryService {
         return this.inventoryRepository.ChangeThreshold(id,changeThresholdIngredientDto)
     }
 
-    async ChangeIngredient(amount: number, ingredientId: string){
-        return await this.inventoryRepository.ChangeIngredient(ingredientId,amount)
+    async ChangeIngredientStock(amount: number, ingredientId: string){
+        return await this.inventoryRepository.ChangeIngredientStock(ingredientId,amount)
+    }
+
+    async PatchIngredientStock(stock: number, ingredientId: string){
+        return this.inventoryRepository.PatchIngredientStock(stock,ingredientId)
     }
 
     async SetSupplier(ingredientId: string , supplierDto : {supplierId: string}, user:User){
@@ -88,12 +94,10 @@ export class InventoryService {
         try{
             this.invoiceRepository.AcceptInvoice(invoiceId, user)
             const invoice =  await this.invoiceRepository.GetInvoiceById(invoiceId)
-
-            
             const note = "accept invoice"
             const ingredient = invoice.ingredient
             const amount = invoice.amount
-            await this.ChangeIngredient(amount,ingredient.id)
+            await this.ChangeIngredientStock(amount,ingredient.id)
             const createDto: CreateStockChangeHistoryDto = {note,ingredient,amount}
             this.CreateStockChange(createDto,user)
         }
@@ -137,16 +141,41 @@ export class InventoryService {
     async CreateCategory(createDishCategoryDto:CreateDishCategoryDto,user: User){
         const {categoryName} =createDishCategoryDto
         
-        return this.ingredientCategoryRepository.CreateIngredientCategory(categoryName,user)
+        return await this.ingredientCategoryRepository.CreateIngredientCategory(categoryName,user)
     }
 
     async AssignCategory(categoryId:string, ingredientId:string){
         const category =await this.ingredientCategoryRepository.GetCategoryById(categoryId)
-        return this.inventoryRepository.AssignCategory(ingredientId,category)
+        return await this.inventoryRepository.AssignCategory(ingredientId,category)
+    
     }
 
     async GetCategory(user:User): Promise<IngredientCategory[]>{
-        return this.ingredientCategoryRepository.GetAllCategory(user)
+        return await this.ingredientCategoryRepository.GetAllCategory(user)
     }
     
+    async PatchIngredient(user: User,ingredientId: string, changeIngredientDto: ChangeIngredientDto){
+        console.log(changeIngredientDto)
+        const {name, stock, priceEach, lowThreshold,unit, supplierId,ingredientCategoryId} = changeIngredientDto
+        if(stock){
+            try{
+                const amount = await this.inventoryRepository.PatchIngredientStock(stock, ingredientId)
+                if(amount != 0.00){
+                    const ingredient = await this.GetIngredientsById(ingredientId)
+                    await this.stockChangeHistoryRepository.CreateStockHistory({note:"change stock",amount,ingredient},user)
+                }
+            }
+            catch{}
+        }
+        if(supplierId){
+            await this.SetSupplier(ingredientId, {supplierId}, user)
+        }
+        if(ingredientCategoryId){
+            await this.AssignCategory(ingredientCategoryId,ingredientId)
+        }
+        if(unit || name || priceEach || lowThreshold){
+            await this.inventoryRepository.PatchIngredient(user, ingredientId, name, priceEach, lowThreshold, unit)
+        }
+            
+    }
 }

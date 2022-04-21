@@ -27,7 +27,7 @@ export class DishCategoryRepository extends Repository<DishCategory>{
     }
 
     async GetCategoryById(id: string): Promise<DishCategory>{
-        const foundCategory = this.findOne(id)
+        const foundCategory =await this.findOne(id)
         if(!foundCategory){
             throw new NotFoundException(`Category with id '${id}' not found`)
         }

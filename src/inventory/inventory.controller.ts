@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } f
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
+import { ChangeIngredientDto } from './Dto/change-ingredient.dto';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
 import { CreateIngredientDto } from './Dto/create-ingredient.dto';
 import { CreateIngredientCategoryDto } from './Dto/create-ingredientCategory.dto';
@@ -102,6 +103,13 @@ export class InventoryController {
     async GetCategory(@GetUser() user: User):Promise<IngredientCategory[]>
     {
         return this.inventoryService.GetCategory(user)
+    }
+
+    @Patch("ingredient/:id")
+    async PatchIngredient(@GetUser() user: User,
+    @Param('id') ingredientId: string, 
+    @Body() changeIngredientDto: ChangeIngredientDto){
+        return this.inventoryService.PatchIngredient(user,ingredientId, changeIngredientDto)
     }
 }
     

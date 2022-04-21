@@ -25,10 +25,12 @@ export class IngredientCategoryRepository extends Repository<IngredientCategory>
     }
 
     async GetCategoryById(id: string): Promise<IngredientCategory>{
-        const foundCategory = this.findOne(id)
+        
+        const foundCategory =await this.findOne(id)
         if(!foundCategory){
             throw new NotFoundException(`Category with id '${id}' not found`)
         }
         return foundCategory
+        
     }
 }

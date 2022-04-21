@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConsoleLogger, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { DishService } from 'src/dish/dish.service';
@@ -54,8 +54,9 @@ export class OrderService {
         const order =await this.GetOrderById(orderId,user)
         if(order.status == OrderStatus.open){
         order.status = OrderStatus.processing
-        await this.orderRepository.save(order)
         order.acceptAt = this.GetTime()
+        await this.orderRepository.save(order)
+    
         return order
         }
         else{
@@ -65,8 +66,6 @@ export class OrderService {
 
     async FinishOrder(orderId: number, user: User): Promise<Order>{
         const order = await this.GetOrderById(orderId,user)
-        console.log(order)
-        
         order.orderDishs.forEach( async (orderDish) => {
             console.log(orderDish)
             const dishId = await this.orderDishRepository.GetDishIdByOrderDishId(orderDish.orderDishId)
@@ -75,8 +74,8 @@ export class OrderService {
 
         order.status = OrderStatus.finished
         order.fishedAt = this.GetTime()
-        await this.orderRepository.save(order)
-        order.orderDishs
+        order.cookingTime = this.IntToTime(+order.fishedAt - +order.acceptAt)
+        // await this.orderRepository.save(order)
         return order
     }
 
@@ -88,6 +87,14 @@ export class OrderService {
         const d = new Date();
         d.setHours(d.getHours() - d.getTimezoneOffset() / 60);
         return d
+    }
+
+    IntToTime(e){
+        e= e/1000
+        var h = Math.floor(e / 3600).toString().padStart(2,'0'),
+            m = Math.floor(e % 3600 / 60).toString().padStart(2,'0'),
+            s = Math.floor(e % 60).toString().padStart(2,'0');
+        return h + ':' + m + ':' + s;
     }
 
     

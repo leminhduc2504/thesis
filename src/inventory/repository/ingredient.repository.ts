@@ -6,7 +6,7 @@ import { ChangeThresholdIngredientDto } from "../Dto/change-threshold-ingredient
 import { CreateIngredientDto } from "../Dto/create-ingredient.dto";
 import { GetIngredientsFilterDto } from "../Dto/get-ingredients-filter-dto";
 import { IngredientCategory } from "../Entity/ingredient-category.entity";
-import { AutoRefillStatus, Ingredient } from "../Entity/ingredient.entity";
+import { AutoRefillStatus, Ingredient, IngredientUnit } from "../Entity/ingredient.entity";
 
 @EntityRepository(Ingredient)
 export class IngredientRepository extends Repository<Ingredient>{
@@ -54,7 +54,8 @@ export class IngredientRepository extends Repository<Ingredient>{
         return ingredient
     }
 
-    async ChangeIngredient(id:string, amount:number){
+    async ChangeIngredientStock(id:string, amount:number){
+        
         const foundIngredient =await this.findOne(id)
         foundIngredient.stock =+foundIngredient.stock + +amount
         if(foundIngredient.stock < amount){
@@ -99,5 +100,33 @@ export class IngredientRepository extends Repository<Ingredient>{
         const ingredient = await this.GetIngredientById(ingredientId)
         ingredient.ingredientCategory =category
         await this.save(ingredient)
+    }
+
+    async PatchIngredient(user:User ,id: string, name: string, priceEach:number , lowThreshold: number, unit: IngredientUnit ){
+        const ingredient = await this.GetIngredientById(id)
+        if(name){
+            ingredient.name = name
+        }
+        if(priceEach){
+            ingredient.priceEach = priceEach
+        }
+        if(lowThreshold){
+            ingredient.lowThreshold = lowThreshold
+        }
+        if(unit){
+            ingredient.unit = unit
+        }
+        console.log(ingredient)
+        await this.save(ingredient)
+
+    }
+
+    async PatchIngredientStock(stock : number ,ingredientId: string): Promise<number>{
+        const ingredient =await this.GetIngredientById(ingredientId)
+        const dif = stock - ingredient.stock
+        ingredient.stock = stock
+        
+        await this.save(ingredient)
+        return dif
     }
 }

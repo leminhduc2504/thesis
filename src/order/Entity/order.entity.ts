@@ -34,6 +34,11 @@ export class Order{
     @OneToMany((_type) => OrderDish, (orderDish) => orderDish.order, {eager:true})
     orderDishs: OrderDish[]
 
+    @Column({type: 'time', nullable: true})
+    estimatedTime: string
+
+    @Column({type: 'time', nullable: true})
+    cookingTime: string
 }
 
 

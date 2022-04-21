@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { CreateStockChangeHistoryDto } from 'src/inventory/Dto/create-stockHistory.dto';
@@ -58,8 +58,8 @@ export class DishService {
     }
 
     async CreateDish(createDishDto:CreateDishDto, user:User):Promise<Dish>{
-        const {name,retailPrice,ingredientPrice,ingredientInfos} = createDishDto
-        const newDish =await this.dishRepository.CreateDish(name,retailPrice,ingredientPrice, user)
+        const {name,estimatedCookingTime,retailPrice,ingredientPrice,ingredientInfos} = createDishDto
+        const newDish =await this.dishRepository.CreateDish(name,estimatedCookingTime,retailPrice,ingredientPrice, user)
         await this.CreateListDishIngredient(ingredientInfos, newDish.id)
         return newDish
     }
@@ -70,12 +70,20 @@ export class DishService {
 
     async TakeIngredient(amount: number, dishId: string, user:User){
         const dish =await this.GetDishById(dishId)
-        dish.dishIngredients.forEach(dishIngredient => {
-            this.inventoryService.ChangeIngredient(amount*dishIngredient.amount, dishIngredient.ingredient.id)
-            const note = "cooking"
-            const createDto: CreateStockChangeHistoryDto = {note:"cooking",ingredient:dishIngredient.ingredient,amount:amount*dishIngredient.amount}
+        for(let i = 0 ; i<dish.dishIngredients.length; i++){
+            const takenAmount = - +amount* + dish.dishIngredients[i].amount
+            console.log(takenAmount)
+            await this.inventoryService.ChangeIngredientStock(takenAmount, dish.dishIngredients[i].ingredient.id)
+            const createDto: CreateStockChangeHistoryDto = {note:"cooking "+ dish.name,ingredient:dish.dishIngredients[i].ingredient,amount:takenAmount}
             this.inventoryService.CreateStockChange(createDto,user)
-        })
+        }
+
+        // dish.dishIngredients.forEach(async dishIngredient => {
+        //     console.log(- +amount* +dishIngredient.amount)
+        //     await this.inventoryService.ChangeIngredient(- +amount* +dishIngredient.amount, dishIngredient.ingredient.id)
+        //     const createDto: CreateStockChangeHistoryDto = {note:"cooking",ingredient:dishIngredient.ingredient,amount:amount*dishIngredient.amount}
+        //     this.inventoryService.CreateStockChange(createDto,user)
+        // })
     }
 
     async CreateCategory(createDishCategoryDto:CreateDishCategoryDto,user: User){

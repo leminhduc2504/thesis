@@ -1,5 +1,5 @@
 import { Dish } from "src/dish/Enitity/dish.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./order.entity";
 
 @Entity()
@@ -15,4 +15,6 @@ export class OrderDish {
     
     @ManyToOne((_type) => Order, order => order.orderDishs, {eager:false,onDelete: 'CASCADE'})
     order: Order
+
+    
 }
