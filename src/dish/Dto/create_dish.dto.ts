@@ -4,7 +4,7 @@ export class CreateDishDto {
 
     retailPrice: number
 
-    estimatedCookingTime: string
+    estimatedCookingTime: number
 
     ingredientPrice: number
 

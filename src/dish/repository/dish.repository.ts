@@ -39,7 +39,7 @@ export class DishRepository extends Repository<Dish>{
         return foundDish
     }
 
-    async CreateDish(name: string,estimatedCookingTime: string,retailPrice: number, ingredientPrice: number, user: User): Promise<Dish>{
+    async CreateDish(name: string,estimatedCookingTime: number,retailPrice: number, ingredientPrice: number, user: User): Promise<Dish>{
         // const {name,ingredient_ids} = createDishDto
         
         const newDish = this.create({name,estimatedCookingTime,retailPrice,ingredientPrice,user})

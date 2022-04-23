@@ -88,7 +88,6 @@ export class DishService {
 
     async CreateCategory(createDishCategoryDto:CreateDishCategoryDto,user: User){
         const {categoryName} =createDishCategoryDto
-        
         return this.dishCategoryRepository.CreateDishCategory(categoryName,user)
     }
 
@@ -101,4 +100,5 @@ export class DishService {
         return this.dishCategoryRepository.GetAllCategory(user)
     }
     
+  
 }
