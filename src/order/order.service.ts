@@ -75,7 +75,7 @@ export class OrderService {
         order.status = OrderStatus.finished
         order.fishedAt = this.GetTime()
         order.cookingTime = this.IntToTime(+order.fishedAt - +order.acceptAt)
-        // await this.orderRepository.save(order)
+        await this.orderRepository.save(order)
         return order
     }
 
