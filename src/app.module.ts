@@ -21,7 +21,7 @@ import { TwilioModule } from 'nestjs-twilio';
       database: 'thesis',
       autoLoadEntities: true,
       synchronize: true,
-      timezone: "-7"
+      timezone: "z"
     }),
     AuthModule,
     InventoryModule,
