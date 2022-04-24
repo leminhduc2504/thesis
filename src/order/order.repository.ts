@@ -23,7 +23,6 @@ export class OrderRepository extends Repository<Order>{
         if(status){
             query.andWhere('order.status = :status',{status})
         }
-        // console.log(start,end)
         if(start && end){
             query.andWhere('order.createdAt BETWEEN :start AND :end', {start , end});
         }

@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { IngredientRepository } from './repository/ingredient.repository';
 import { AuthModule } from 'src/auth/auth.module';
 import { SupplierModule } from 'src/supplier/supplier.module';
-import { InvoiceRepository } from './repository/invoce.repository';
+import { InvoiceRepository } from './repository/invoice.repository';
 import { StockChangeHistoryRepository } from './repository/history-change.repository';
 import { IngredientCategory } from './Entity/ingredient-category.entity';
 import { IngredientCategoryRepository } from './repository/ingredient-category.repository';

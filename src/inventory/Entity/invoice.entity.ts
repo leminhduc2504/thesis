@@ -11,11 +11,11 @@ export class Invoice{
     @Column()
     status: InvoiceStatus = InvoiceStatus.onDelivery
 
-    @CreateDateColumn({nullable: true})
-    createdAt: Date = null
+    @CreateDateColumn()
+    createdAt: Date 
 
     @Column({nullable: true})
-    deliveredAt: Date = null
+    deliveredAt: Date
 
     @Column({type: "decimal", precision: 6, scale: 2, nullable: true })
     invoicePrice: number

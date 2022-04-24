@@ -67,7 +67,6 @@ export class OrderService {
     async FinishOrder(orderId: number, user: User): Promise<Order>{
         const order = await this.GetOrderById(orderId,user)
         order.orderDishs.forEach( async (orderDish) => {
-            console.log(orderDish)
             const dishId = await this.orderDishRepository.GetDishIdByOrderDishId(orderDish.orderDishId)
             this.dishService.TakeIngredient(orderDish.amount,dishId,user)
         })

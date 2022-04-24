@@ -29,7 +29,11 @@ export class InvoiceRepository extends Repository<Invoice>{
 
     async CreateInvocie(createInvoiceDto: CreateInvoiceDto,ingredient:Ingredient, supplier: Supplier, user: User): Promise<Invoice>{
         const{unit, invoicePrice, amount } = createInvoiceDto
-        const newInvoice = this.create({user,unit,invoicePrice,amount,ingredient,supplier})
+
+        const createdAt = new Date();
+        createdAt.setHours(createdAt.getHours() - createdAt.getTimezoneOffset() / 60);
+
+        const newInvoice = this.create({createdAt,user,unit,invoicePrice,amount,ingredient,supplier})
         await this.save(newInvoice)
         return newInvoice
     }

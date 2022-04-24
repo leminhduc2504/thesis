@@ -1,10 +1,9 @@
-import { BadRequestException, ConsoleLogger, Injectable } from '@nestjs/common';
+import { BadRequestException,  Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
 import { User } from 'src/auth/user.entity';
 import { CreateDishCategoryDto } from 'src/dish/Dto/create-dish-category.dto';
 import { SupplierService } from 'src/supplier/supplier.service';
-import { NumberResource } from 'twilio/lib/rest/pricing/v2/number';
 import { ChangeIngredientDto } from './Dto/change-ingredient.dto';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
 import { CreateIngredientDto } from './Dto/create-ingredient.dto';
@@ -17,7 +16,7 @@ import { Invoice } from './Entity/invoice.entity';
 import { StockChangeHistoryRepository } from './repository/history-change.repository';
 import { IngredientCategoryRepository } from './repository/ingredient-category.repository';
 import { IngredientRepository } from './repository/ingredient.repository';
-import { InvoiceRepository } from './repository/invoce.repository';
+import { InvoiceRepository } from './repository/invoice.repository';
 
 @Injectable()
 export class InventoryService {
@@ -80,7 +79,6 @@ export class InventoryService {
     async CreateInvoice(createInvoiceDto: CreateInvoiceDto, user:User){
         const { ingredientId } = createInvoiceDto
         const ingredient = await this.GetIngredientsById(ingredientId)
-        console.log(ingredient)
         if(ingredient.supplier == null){
             throw new BadRequestException("Please set supplier")
         }
@@ -155,7 +153,6 @@ export class InventoryService {
     }
     
     async PatchIngredient(user: User,ingredientId: string, changeIngredientDto: ChangeIngredientDto){
-        console.log(changeIngredientDto)
         const {name, stock, priceEach, lowThreshold,unit, supplierId,ingredientCategoryId} = changeIngredientDto
         if(stock){
             try{
