@@ -8,13 +8,15 @@ import { Order, OrderStatus } from "./Entity/order.entity";
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order>{
     async GetOrders(filter: FilterGetOrderDto, user: User): Promise<Order[]>{
-        // const query = this.createQueryBuilder('order')
-        // .leftJoinAndSelect("order.orderDish","orderDish")
-        // .leftJoinAndSelect("orderDish.dish", "dish")
-        // query.where({user})
-        // const orders =await query.getMany()
-
+        
+        
         const {status,start,end} = filter
+
+        const start_ = new Date(start)
+        const end_ = new Date(end)
+        start_.setHours( start_.getHours() + 7 );
+        end_.setHours( end_.getHours() + 7 );
+
         const query = this.createQueryBuilder('order')
         .leftJoinAndSelect("order.orderDishs","orderDishs")
         .leftJoinAndSelect("orderDishs.dish", "dish")
@@ -24,13 +26,10 @@ export class OrderRepository extends Repository<Order>{
             query.andWhere('order.status = :status',{status})
         }
         if(start && end){
-            query.andWhere('order.createdAt BETWEEN :start AND :end', {start , end});
+            query.andWhere('order.createdAt BETWEEN :start_ AND :end_', {start_ , end_});
         }
         query.orderBy("createdAt", "DESC")
         const orders = query.getMany()
-        // if(!orders){
-        //     throw new NotFoundException()
-        // }
         return orders;
     }
 
@@ -60,14 +59,5 @@ export class OrderRepository extends Repository<Order>{
         return newOrder
     }
 
-    // async AcceptOrder(orderId: number, user: User){    
-    //     const order = await this.findOne({orderId,user})
-    //     order.status = OrderStatus.processing
-    //     await this.save(order)
-    // }
-    // async FinishOrder(orderId: number, user: User){
-    //     const order = await this.findOne({orderId,user})
-    //     order.status = OrderStatus.finished
-    //     await this.save(order)
-    // }
+    
 }

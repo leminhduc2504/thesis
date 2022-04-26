@@ -72,10 +72,9 @@ export class DishService {
         const dish =await this.GetDishById(dishId)
         for(let i = 0 ; i<dish.dishIngredients.length; i++){
             const takenAmount = - +amount* + dish.dishIngredients[i].amount
-            console.log(takenAmount)
             await this.inventoryService.ChangeIngredientStock(takenAmount, dish.dishIngredients[i].ingredient.id)
             const createDto: CreateStockChangeHistoryDto = {note:"cooking "+ dish.name,ingredient:dish.dishIngredients[i].ingredient,amount:takenAmount}
-            this.inventoryService.CreateStockChange(createDto,user)
+            await this.inventoryService.CreateStockChange(createDto,user)
         }
 
         // dish.dishIngredients.forEach(async dishIngredient => {

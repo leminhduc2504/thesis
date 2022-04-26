@@ -56,7 +56,6 @@ export class OrderService {
         order.status = OrderStatus.processing
         order.acceptAt = this.GetTime()
         await this.orderRepository.save(order)
-    
         return order
         }
         else{
@@ -66,10 +65,16 @@ export class OrderService {
 
     async FinishOrder(orderId: number, user: User): Promise<Order>{
         const order = await this.GetOrderById(orderId,user)
-        order.orderDishs.forEach( async (orderDish) => {
-            const dishId = await this.orderDishRepository.GetDishIdByOrderDishId(orderDish.orderDishId)
-            this.dishService.TakeIngredient(orderDish.amount,dishId,user)
-        })
+
+        for(let i = 0; i < order.orderDishs.length; i++){
+            const dishId = await this.orderDishRepository.GetDishIdByOrderDishId(order.orderDishs[i].orderDishId)
+            await this.dishService.TakeIngredient(order.orderDishs[i].amount,dishId,user)
+        }
+
+        // order.orderDishs.forEach( async (orderDish) => {
+        //     const dishId = await this.orderDishRepository.GetDishIdByOrderDishId(orderDish.orderDishId)
+        //     await this.dishService.TakeIngredient(orderDish.amount,dishId,user)
+        // })
 
         order.status = OrderStatus.finished
         order.fishedAt = this.GetTime()
