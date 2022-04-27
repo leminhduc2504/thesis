@@ -14,7 +14,13 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'https://gri.netlify.app'
+    ],
+    credentials: true,
+  });
   await app.listen(3000);
 }
 bootstrap();

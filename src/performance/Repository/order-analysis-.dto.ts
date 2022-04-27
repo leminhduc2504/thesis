@@ -1,3 +1,4 @@
+import { request } from "http"
 import { Dish } from "src/dish/Enitity/dish.entity"
 import { Ingredient } from "src/inventory/Entity/ingredient.entity"
 
@@ -18,3 +19,6 @@ export class IngredientAnalysis{
     ingredient: Ingredient
     ingredientAmount: number = 0
 }
+
+
+

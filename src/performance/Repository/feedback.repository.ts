@@ -52,11 +52,13 @@ export class FeedbackRepository extends Repository<Feedback>{
         const {start, end} = filterDto
         const query = this.createQueryBuilder('feedback')
         query.where({user})
-        // const startC = new Date(start)
-        // const endC = new Date(end)
+        const start_ = new Date(start)
+        const end_ = new Date(end)
+        start_.setHours( start_.getHours() + 7 );
+        end_.setHours( end_.getHours() + 7 );
 
         if(start && end){
-            query.andWhere('feedback.createdAt BETWEEN :start AND :end', {start , end});
+            query.andWhere('feedback.createdAt BETWEEN :start_ AND :end_', {start_ , end_});
         }
         const feedbacks =await query.getMany()
         return feedbacks
