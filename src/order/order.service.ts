@@ -87,6 +87,16 @@ export class OrderService {
         return this.orderDishRepository.GetDishIdByOrderDishId(id)
     }
 
+    async PatchStartCookTime(id, createDto){
+        return this.orderDishRepository.PatchStartCookTime(id, createDto)
+    }
+
+    async PatchFinishCookTime(id, createDto){
+        return this.orderDishRepository.PatchFinishCookTime(id, createDto)
+    }
+
+
+
     GetTime():Date{
         const d = new Date();
         d.setHours(d.getHours() - d.getTimezoneOffset() / 60);

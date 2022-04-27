@@ -46,4 +46,13 @@ export class OrderController {
     async finishOrder(@GetUser() user: User,@Param('id') id: number): Promise<Order>{
         return this.orderService.FinishOrder(id,user)
     }
+
+    @Patch("start/:orderDishId")
+    async PatchStartCookTime(@Param('orderDishId') id: number, @Body() createDto: {time: Date}){
+        return this.orderService.PatchStartCookTime(id, createDto)
+    }
+    @Patch("end/:orderDishId")
+    async PatchFinishCookTime(@Param('orderDishId') id: number, @Body() createDto: {time: Date}){
+        return this.orderService.PatchFinishCookTime(id, createDto)
+    }
 }
