@@ -9,7 +9,7 @@ import { QuerryFilterDishDto } from './Dto/qurry-dish-filter.dto';
 import { DishCategory } from './Enitity/dish-category.entity';
 import { Dish } from './Enitity/dish.entity';
 
-@Controller('dish')
+@Controller('api/dish')
 @UseGuards(AuthGuard())
 export class DishController {
     orderService: any;

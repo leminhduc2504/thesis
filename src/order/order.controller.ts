@@ -7,7 +7,7 @@ import { FilterGetOrderDto } from './Dto/filter-get-order.dto';
 import { Order, OrderStatus } from './Entity/order.entity';
 import { OrderService } from './order.service';
 
-@Controller('order')
+@Controller('api/order')
 @UseGuards(AuthGuard())
 export class OrderController {
     constructor(

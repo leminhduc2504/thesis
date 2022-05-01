@@ -15,7 +15,7 @@ import { Invoice } from './Entity/invoice.entity';
 import { InventoryService } from './inventory.service'
 
 
-@Controller('inventory')
+@Controller('api/inventory')
 @UseGuards(AuthGuard())
 export class InventoryController {
     constructor(
