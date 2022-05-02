@@ -9,7 +9,7 @@ import { ReponseFeedbackDto } from './Dto/reponse-feedback-dto';
 import { Feedback } from './Entity/feedback.entity';
 import { PerformanceService } from './performance.service';
 
-@Controller('api/performance')
+@Controller('performance')
 
 export class PerformanceController {
     constructor(

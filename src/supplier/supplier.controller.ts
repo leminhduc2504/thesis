@@ -6,7 +6,7 @@ import { CreateSupplierDto } from './Dto/create-supplier.dto';
 import { Supplier } from './Entity/supplier.entity';
 import { SupplierService } from './supplier.service';
 
-@Controller('api/supplier')
+@Controller('supplier')
 @UseGuards(AuthGuard())
 export class SupplierController {
     constructor(
