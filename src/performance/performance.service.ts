@@ -10,7 +10,9 @@ import { DateFilterDto } from './Dto/get-filter-dto';
 import { ReponseFeedbackDto } from './Dto/reponse-feedback-dto';
 import { Feedback } from './Entity/feedback.entity';
 import { FeedbackRepository } from './Repository/feedback.repository';
-import { DishAnalysis, IngredientAnalysis, OrderAnalysis } from './Repository/order-analysis-.dto';
+import { DishAnalysis, IngredientAnalysis, OrderAnalysis } from './Dto/order-analysis-.dto';
+import { ReponseFilterOrderByDay } from './Dto/reponse-order-filter-day.dto';
+import e from 'express';
 
 @Injectable()
 export class PerformanceService {
@@ -20,13 +22,9 @@ export class PerformanceService {
     constructor(
         @InjectRepository(FeedbackRepository)
         private feedbackRepository: FeedbackRepository,
-
         private orderService: OrderService,
         private dishService: DishService,
         private authService: AuthService
-
-        
-
     ){}
 
     async CreateFeedback( createFeedbackDto: CreateFeedbackDto): Promise<Feedback>{
@@ -59,6 +57,7 @@ export class PerformanceService {
         orders.forEach( (order) =>  {
             analysis.retailPrice =+ analysis.retailPrice + +order.orderPrice
             order.orderDishs.forEach(  (orderDish)=> {
+                
                 const found = analysis.dishs.find( e => e.dish.id === orderDish.dish.id );
                 if (found){
                     found.dishAmount += orderDish.amount
@@ -72,6 +71,7 @@ export class PerformanceService {
                 }
             })
         }) 
+
         for (let i = 0; i <analysis.dishs.length; i++ ){
             const dishIngredients = await this.dishService.GetDishIngredients(analysis.dishs[i].dish.id);
             dishIngredients.forEach((dishIngredient) => {
@@ -139,12 +139,28 @@ export class PerformanceService {
         }
         return  analysis
     }
-    
-    // async GetOrderPerformanceWeekly(date:Date, user: User): Promise<OrderAnalysis[]>{
-    //     for(let i = 0 ; i)
-    // }
 
-    // async GetOrderPerformanceMonthly(date:Date, user:User): Promise<OrderAnalysis[]>{
+    async GetOrderAmountByDay(date: DateFilterDto,user: User){
+        const status = null 
+        const {start,end} =date 
+        const startC = new Date(start)
+        const endC = new Date(end)
+        
+        const getOrderDto: FilterGetOrderDto = {status,start:startC,end:endC}
+        const orders =await this.orderService.GetOrders(getOrderDto,user)
+        const reponse = new ReponseFilterOrderByDay()
+        reponse.amount = new Array<number>()
+        reponse.dates = new Array<string>()
+        console.log(startC)
+        for (let date_ =startC ; date_ <= endC; date_.setDate(date_.getDate() + 1)) {
+            const start = startC
+            const orders = await this.orderService.GetOrders({status:null,start:date_,end:date_ },user)
+            reponse.amount.push(orders.length)
+            reponse.dates.push(date_.toISOString().split('T')[0])
+        }
+        return reponse
+    }
+    // async CheckOrderTime(date: Date){
 
     // }
 

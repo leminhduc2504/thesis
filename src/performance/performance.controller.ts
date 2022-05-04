@@ -56,7 +56,11 @@ export class PerformanceController {
         return this.performanceService.GetOrderPerformanceDaily(date,user)
     }
 
-
+    @Get("order-amount-by-day")
+    @UseGuards(AuthGuard())
+    async GetOrderAmountByDay(@Query() date: DateFilterDto, @GetUser() user: User){
+        return this.performanceService.GetOrderAmountByDay(date,user)
+    }
 
     //dish
 }

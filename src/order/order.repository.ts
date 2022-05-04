@@ -14,6 +14,7 @@ export class OrderRepository extends Repository<Order>{
 
         const start_ = new Date(start)
         const end_ = new Date(end)
+        end_.setHours(end_.getHours() +24);
 
         const query = this.createQueryBuilder('order')
         .leftJoinAndSelect("order.orderDishs","orderDishs")
