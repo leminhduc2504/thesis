@@ -28,8 +28,8 @@ export class Order{
     @Column({type: "decimal", precision: 6, scale: 2, nullable: true })
     orderPrice: number
 
-    // @Column({type: "decimal", precision: 6, scale: 2, nullable: true })
-    // ingredientPrice: number
+    @Column({type: "decimal", precision: 6, scale: 2, nullable: true })
+    ingredientPrice: number
 
     @ManyToOne((_type) => User, user => user.orders, {eager:false,onDelete: 'CASCADE' })
     user:User

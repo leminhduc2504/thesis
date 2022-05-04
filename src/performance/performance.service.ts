@@ -1,4 +1,4 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/auth/user.entity';
@@ -12,7 +12,6 @@ import { Feedback } from './Entity/feedback.entity';
 import { FeedbackRepository } from './Repository/feedback.repository';
 import { DishAnalysis, IngredientAnalysis, OrderAnalysis } from './Dto/order-analysis-.dto';
 import { ReponseFilterOrderByDay } from './Dto/reponse-order-filter-day.dto';
-import e from 'express';
 
 @Injectable()
 export class PerformanceService {
@@ -56,6 +55,7 @@ export class PerformanceService {
         analysis.ingredients = new Array<IngredientAnalysis>()
         orders.forEach( (order) =>  {
             analysis.retailPrice =+ analysis.retailPrice + +order.orderPrice
+            analysis.ingredientPrice =+ analysis.ingredientPrice + +order.ingredientPrice
             order.orderDishs.forEach(  (orderDish)=> {
                 
                 const found = analysis.dishs.find( e => e.dish.id === orderDish.dish.id );
@@ -151,7 +151,6 @@ export class PerformanceService {
         const reponse = new ReponseFilterOrderByDay()
         reponse.amount = new Array<number>()
         reponse.dates = new Array<string>()
-        console.log(startC)
         for (let date_ =startC ; date_ <= endC; date_.setDate(date_.getDate() + 1)) {
             const start = startC
             const orders = await this.orderService.GetOrders({status:null,start:date_,end:date_ },user)

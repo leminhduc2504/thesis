@@ -34,20 +34,25 @@ export class OrderService {
     }
 
     async CreateListOrderDish(dishInfos: DishInfo[], order:Order){
+        let ingredientPrice = 0.00
         for (let i = 0; i < dishInfos.length; i++) {
+            const dish = await this.dishService.GetDishById(dishInfos[i].dishId)
             this.orderDishRepository.CraeteOrderDish(
-                await this.dishService.GetDishById(dishInfos[i].dishId),
+                dish,
                 dishInfos[i].amount,
                 order)
+            ingredientPrice = +ingredientPrice + +dish.ingredientPrice*+dishInfos[i].amount
         }
-        
+        return ingredientPrice
     }
 
     async CreateOrder(createOrderDto:CreateOrderDto, user:User):Promise<Order>{
         const {price, dishInfos} = createOrderDto
-        const newOrder =await this.orderRepository.CreateOrder(price, user)
         
-        await this.CreateListOrderDish(dishInfos, newOrder)
+        const newOrder =await this.orderRepository.CreateOrder(price, user)
+        const ingredientPrice = await this.CreateListOrderDish(dishInfos, newOrder)
+        newOrder.ingredientPrice = ingredientPrice
+        await this.orderRepository.save(newOrder)
         return newOrder
     }
 
