@@ -145,19 +145,21 @@ export class PerformanceService {
         const {start,end} =date 
         const startC = new Date(start)
         const endC = new Date(end)
-        
-        const getOrderDto: FilterGetOrderDto = {status,start:startC,end:endC}
-        const orders =await this.orderService.GetOrders(getOrderDto,user)
-        const reponse = new ReponseFilterOrderByDay()
-        reponse.amount = new Array<number>()
-        reponse.dates = new Array<string>()
+        const response = new ReponseFilterOrderByDay()
+        response.amount = new Array<number>()
+        response.dates = new Array<string>()
+        response.profit = new Array<number>()
         for (let date_ =startC ; date_ <= endC; date_.setDate(date_.getDate() + 1)) {
-            const start = startC
             const orders = await this.orderService.GetOrders({status:null,start:date_,end:date_ },user)
-            reponse.amount.push(orders.length)
-            reponse.dates.push(date_.toISOString().split('T')[0])
+            let _profit = 0.00
+            orders.forEach(order => {
+                _profit =+_profit + (+order.orderPrice - +order.ingredientPrice)
+            })
+            response.profit.push(_profit)
+            response.amount.push(orders.length)
+            response.dates.push(date_.toISOString().split('T')[0])
         }
-        return reponse
+        return response
     }
     // async CheckOrderTime(date: Date){
 
