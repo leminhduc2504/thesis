@@ -30,7 +30,8 @@ export class InvoiceRepository extends Repository<Invoice>{
     async CreateInvocie(createInvoiceDto: CreateInvoiceDto,ingredient:Ingredient, supplier: Supplier, user: User): Promise<Invoice>{
         const{unit, invoicePrice, amount } = createInvoiceDto
         const createdAt = new Date();
-        createdAt.setHours(createdAt.getHours() - createdAt.getTimezoneOffset() / 60);
+        // createdAt.setHours(createdAt.getHours() - createdAt.getTimezoneOffset() / 60);
+        
         const newInvoice = this.create({user,unit,invoicePrice,amount,ingredient,supplier})
         
         await this.save(newInvoice)
@@ -43,7 +44,7 @@ export class InvoiceRepository extends Repository<Invoice>{
 
     async AcceptInvoice(invoceId: string, user: User){
         const deliveredAt = new Date();
-        deliveredAt.setHours(deliveredAt.getHours() - deliveredAt.getTimezoneOffset() / 60);
+        // deliveredAt.setHours(deliveredAt.getHours() - deliveredAt.getTimezoneOffset() / 60);
         const invoice = await this.findOne({invoceId, user})
         invoice.status = InvoiceStatus.finished
         invoice.deliveredAt =deliveredAt 

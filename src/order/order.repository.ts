@@ -14,8 +14,6 @@ export class OrderRepository extends Repository<Order>{
 
         const start_ = new Date(start)
         const end_ = new Date(end)
-        start_.setHours( start_.getHours() + 7 );
-        end_.setHours( end_.getHours() + 7 );
 
         const query = this.createQueryBuilder('order')
         .leftJoinAndSelect("order.orderDishs","orderDishs")
@@ -53,11 +51,10 @@ export class OrderRepository extends Repository<Order>{
 
     async CreateOrder(orderPrice: number ,user: User): Promise<Order>{
         const createdAt = new Date();
-        createdAt.setHours(createdAt.getHours() - createdAt.getTimezoneOffset() / 60);
+        // createdAt.setHours(createdAt.getHours() - createdAt.getTimezoneOffset() / 60);
         const newOrder = this.create({createdAt,orderPrice, status: OrderStatus.open,user})
         await this.save(newOrder)
         return newOrder
     }
-
     
 }

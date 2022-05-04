@@ -54,7 +54,8 @@ export class OrderService {
         const order =await this.GetOrderById(orderId,user)
         if(order.status == OrderStatus.open){
         order.status = OrderStatus.processing
-        order.acceptAt = this.GetTime()
+        // order.acceptAt = this.GetTime()
+        order.acceptAt = new Date()
         await this.orderRepository.save(order)
         return order
         }
@@ -77,7 +78,8 @@ export class OrderService {
         // })
 
         order.status = OrderStatus.finished
-        order.fishedAt = this.GetTime()
+        // order.fishedAt = this.GetTime()
+        order.fishedAt = new Date()
         order.cookingTime = this.IntToTime(+order.fishedAt - +order.acceptAt)
         await this.orderRepository.save(order)
         return order
