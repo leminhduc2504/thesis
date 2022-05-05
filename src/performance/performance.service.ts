@@ -142,22 +142,16 @@ export class PerformanceService {
 
     async GetOrderAmountByDay(date: DateFilterDto,user: User){
         const status = null 
-        const {start,end} =date 
+        let {start,end} =date 
         const startC = new Date(start)
         const endC = new Date(end)
         const response = new ReponseFilterOrderByDay()
         response.amount = new Array<number>()
         response.dates = new Array<string>()
         response.profit = new Array<number>()
-        for (let date_ =startC ; date_ <= endC; date_.setDate(date_.getDate() + 1)) {
-            
-
+        for (let date_ =startC ; date_ <= endC; date_.setHours(date_.getHours() + 24)) {
+        
             const orders = await this.orderService.GetOrders({status:null,start:date_,end:date_ },user)
-            console.log(orders)
-            console.log("start:" +date_)
-            if(date_< endC){
-                console.log("true")
-            }
             let _profit = 0.00
             orders.forEach(order => {
                 _profit =+_profit + (+order.orderPrice - +order.ingredientPrice)
@@ -165,7 +159,6 @@ export class PerformanceService {
             response.profit.push(_profit)
             response.amount.push(orders.length)
             response.dates.push(date_.toLocaleDateString("he-il"))
-            // .split('T')[0]
         }
         return response
     }
