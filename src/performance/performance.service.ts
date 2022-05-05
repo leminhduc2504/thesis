@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/auth/user.entity';
@@ -150,14 +150,22 @@ export class PerformanceService {
         response.dates = new Array<string>()
         response.profit = new Array<number>()
         for (let date_ =startC ; date_ <= endC; date_.setDate(date_.getDate() + 1)) {
+            
+
             const orders = await this.orderService.GetOrders({status:null,start:date_,end:date_ },user)
+            console.log(orders)
+            console.log("start:" +date_)
+            if(date_< endC){
+                console.log("true")
+            }
             let _profit = 0.00
             orders.forEach(order => {
                 _profit =+_profit + (+order.orderPrice - +order.ingredientPrice)
             })
             response.profit.push(_profit)
             response.amount.push(orders.length)
-            response.dates.push(date_.toISOString().split('T')[0])
+            response.dates.push(date_.toLocaleDateString("he-il"))
+            // .split('T')[0]
         }
         return response
     }
