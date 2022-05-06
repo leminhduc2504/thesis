@@ -162,8 +162,33 @@ export class PerformanceService {
         }
         return response
     }
-    // async CheckOrderTime(date: Date){
+    
 
+    // async GetIngredientAnalysByDay(date: DateFilterDto,user: User) {
+    //     const status = null 
+    //     let {start,end} =date 
+    //     const startC = new Date(start)
+    //     const endC = new Date(end)
+    //     const response = new ReponseFilterOrderByDay()
+    //     response.amount = new Array<number>()
+    //     response.dates = new Array<string>()
+    //     response.profit = new Array<number>()
+    //     for (let date_ =startC ; date_ <= endC; date_.setHours(date_.getHours() + 24)) {
+        
+    //         const orders = await this.orderService.GetOrders({status:null,start:date_,end:date_ },user)
+    //         let _profit = 0.00
+    //         orders.forEach(order => {
+    //             _profit =+_profit + (+order.orderPrice - +order.ingredientPrice)
+    //         })
+    //         response.profit.push(_profit)
+    //         response.amount.push(orders.length)
+    //         response.dates.push(date_.toLocaleDateString("he-il"))
+    //     }
+    //     return response
+    // }
+
+    // async GetDishAnalysByDay(date: DateFilterDto,user: User){
+        
     // }
 
 }

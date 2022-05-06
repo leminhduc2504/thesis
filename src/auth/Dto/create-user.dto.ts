@@ -7,4 +7,8 @@ export class UserCredentialDto{
 
     @IsString()
     password: string
+
+    firstname:string
+
+    lastname:string
 }

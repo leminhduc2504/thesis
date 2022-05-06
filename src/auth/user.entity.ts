@@ -18,6 +18,12 @@ export class User{
     @Column({ unique: true})
     username: string
 
+    @Column({ nullable: true})
+    firstname: string
+
+    @Column({ nullable: true})
+    lastname: string
+
     @Column()
     password: string
 
