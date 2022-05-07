@@ -6,9 +6,10 @@ import { AuthModule } from 'src/auth/auth.module';
 import { FeedbackRepository } from './Repository/feedback.repository';
 import { OrderModule } from 'src/order/order.module';
 import { DishModule } from 'src/dish/dish.module';
+import { InventoryModule } from 'src/inventory/inventory.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FeedbackRepository]),AuthModule,OrderModule,DishModule],
+  imports: [TypeOrmModule.forFeature([FeedbackRepository]),AuthModule,OrderModule,DishModule,InventoryModule],
   providers: [PerformanceService],
   controllers: [PerformanceController]
 })

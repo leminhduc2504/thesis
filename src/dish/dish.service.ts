@@ -33,6 +33,10 @@ export class DishService {
         const {categoryName} = filterDto
         return this.dishRepository.getDishs(categoryName,user)
     }
+
+    async GetAllDishs(user: User): Promise<Dish[]>{
+        return this.dishRepository.getAllDishs(user)
+    }
     
     async GetDishById(id: string): Promise<Dish>{
         return this.dishRepository.GetDishById(id)

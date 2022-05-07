@@ -24,6 +24,13 @@ export class IngredientRepository extends Repository<Ingredient>{
         return ingredients;
     }
 
+    async GetAllIngredients(user){
+        const query = this.createQueryBuilder('ingredient')
+        query.where({user})
+        const ingredients =await query.getMany()
+        return ingredients;
+    }
+
     async GetIngredientById(id: string): Promise<Ingredient>{
         const foundIngredient = this.findOne(id)
         if(!foundIngredient){

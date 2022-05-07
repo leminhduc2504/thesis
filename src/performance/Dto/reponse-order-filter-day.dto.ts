@@ -16,3 +16,15 @@ export class ResponseDishAnalysByDay{
     dates: string[]
     dishAnalys: DishAnalysis[][]
 }
+
+export class IngredientGraph{
+    labels: string[]
+    dataset: DatasetIngredient[]
+
+}
+
+export class DatasetIngredient{
+    label: string
+    data: number[]
+    borderWidth: number
+}

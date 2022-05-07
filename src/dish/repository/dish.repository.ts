@@ -24,6 +24,13 @@ export class DishRepository extends Repository<Dish>{
         const dishs =await query.getMany()
         return dishs;
     }
+    async getAllDishs(user: User): Promise<Dish[]>{
+
+        const query = this.createQueryBuilder('dish')
+        query.where({user})
+        const dishs =await query.getMany()
+        return dishs;
+    }
 
     async GetDishById(id: string): Promise<Dish>{
         // const query = this.createQueryBuilder('dish')

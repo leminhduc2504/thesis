@@ -46,6 +46,10 @@ export class InventoryService {
         return this.inventoryRepository.GetIngredients(filterDto,user)
     }
 
+    async GetAllIngredient(user){
+        return this.inventoryRepository.GetAllIngredients(user)
+    }
+
     async CreateIngredient(createIngredientDto:CreateIngredientDto, user:User):Promise<string>{
         return this.inventoryRepository.CreateIngredient(createIngredientDto, user)
     }

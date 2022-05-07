@@ -11,8 +11,9 @@ import { ReponseFeedbackDto } from './Dto/reponse-feedback-dto';
 import { Feedback } from './Entity/feedback.entity';
 import { FeedbackRepository } from './Repository/feedback.repository';
 import { DishAnalysis, IngredientAnalysis, OrderAnalysis } from './Dto/order-analysis-.dto';
-import { ReponseFilterOrderByDay, ResponseDishAnalysByDay, ResponseIngredientAnalysByDay } from './Dto/reponse-order-filter-day.dto';
-import { Ingredient } from 'src/inventory/Entity/ingredient.entity';
+import { DatasetIngredient, IngredientGraph, ReponseFilterOrderByDay, ResponseDishAnalysByDay, ResponseIngredientAnalysByDay } from './Dto/reponse-order-filter-day.dto';
+import { InventoryService } from 'src/inventory/inventory.service';
+import e, { response } from 'express';
 
 @Injectable()
 export class PerformanceService {
@@ -24,7 +25,8 @@ export class PerformanceService {
         private feedbackRepository: FeedbackRepository,
         private orderService: OrderService,
         private dishService: DishService,
-        private authService: AuthService
+        private authService: AuthService,
+        private ingedientService: InventoryService
     ){}
 
     async CreateFeedback( createFeedbackDto: CreateFeedbackDto): Promise<Feedback>{
@@ -101,13 +103,16 @@ export class PerformanceService {
         response.amount = new Array<number>()
         response.dates = new Array<string>()
         response.profit = new Array<number>()
+        
         for (let date_ =startC ; date_ <= endC; date_.setHours(date_.getHours() + 24)) {
         
             const orders = await this.orderService.GetOrders({status:null,start:date_,end:date_ },user)
             let _profit = 0.00
+
             orders.forEach(order => {
                 _profit =+_profit + (+order.orderPrice - +order.ingredientPrice)
             })
+
             response.profit.push(_profit)
             response.amount.push(orders.length)
             response.dates.push(date_.toLocaleDateString("he-il"))
@@ -144,6 +149,78 @@ export class PerformanceService {
             const raw = await this.GetOrderPerformanceDaily({start:date_,end}, user)
             response.dishAnalys.push(raw.dishs)
             response.dates.push(date_.toLocaleDateString("he-il"))
+        }
+        return response
+    }
+
+    async GetIngredientAnalysByDay2(date: DateFilterDto,user: User) {
+        let {start,end} =date 
+        const startC = new Date(start)
+        const endC = new Date(end)
+        const response = new IngredientGraph()
+        response.labels = new Array<string>()
+        response.dataset = new Array<DatasetIngredient>()
+
+        const ingredients =await this.ingedientService.GetAllIngredient(user)
+
+        ingredients.forEach(ingredient => {
+            const data = new DatasetIngredient()
+            data.label = ingredient.name
+            data.borderWidth = 1
+            data.data = new Array<number>()
+            response.dataset.push(data)
+        })
+
+        for (let date_ =startC ; date_ <= endC; date_.setHours(date_.getHours() + 24)) {
+
+            const raw = await this.GetOrderPerformanceDaily({start:date_,end}, user)
+            raw.ingredients.forEach(ingredient => {
+                const result = response.dataset.find(e => e.label === ingredient.ingredient.name)
+                result.data.push(ingredient.ingredientAmount)
+            })
+            
+            response.labels.push(date_.toLocaleDateString("he-il"))
+            response.dataset.forEach(e => {
+                if(e.data.length < response.labels.length){
+                    e.data.push(0)
+                }
+            })
+        }
+        return response
+    }
+
+    async GetDishAnalysByDay2(date: DateFilterDto,user: User) {
+        let {start,end} =date 
+        const startC = new Date(start)
+        const endC = new Date(end)
+        const response = new IngredientGraph()
+        response.labels = new Array<string>()
+        response.dataset = new Array<DatasetIngredient>()
+
+        const ingredients =await this.dishService.GetAllDishs(user)
+
+        ingredients.forEach(ingredient => {
+            const data = new DatasetIngredient()
+            data.label = ingredient.name
+            data.borderWidth = 1
+            data.data = new Array<number>()
+            response.dataset.push(data)
+        })
+
+        for (let date_ =startC ; date_ <= endC; date_.setHours(date_.getHours() + 24)) {
+
+            const raw = await this.GetOrderPerformanceDaily({start:date_,end}, user)
+            raw.dishs.forEach(dish => {
+                const result = response.dataset.find(e => e.label === dish.dish.name)
+                result.data.push(dish.dishAmount)
+            })
+            
+            response.labels.push(date_.toLocaleDateString("he-il"))
+            response.dataset.forEach(e => {
+                if(e.data.length < response.labels.length){
+                    e.data.push(0)
+                }
+            })
         }
         return response
     }
