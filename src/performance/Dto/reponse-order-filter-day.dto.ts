@@ -6,13 +6,13 @@ export class ReponseFilterOrderByDay{
     profit: number[]
 }
 
-export class ReponseIngredientAnalysByDay{
+export class ResponseIngredientAnalysByDay{
     dates: string[]
-    ingredientAnalys: IngredientAnalysis[]
+    ingredientAnalys: IngredientAnalysis[][]
 
 }
 
 export class ResponseDishAnalysByDay{
     dates: string[]
-    dishAnalys: DishAnalysis[]
+    dishAnalys: DishAnalysis[][]
 }
