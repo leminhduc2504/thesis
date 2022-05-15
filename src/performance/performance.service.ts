@@ -226,7 +226,7 @@ export class PerformanceService {
     }
     
 
-    async GetOrderPerformanceDailyByHours(date: DateFilterDto,user: User){
+    async GetDishIngredientByHours(date: DateFilterDto,user: User){
         const status = null 
         const {start,end} =date 
         const startC = new Date(start)
@@ -235,9 +235,9 @@ export class PerformanceService {
         const getOrderDto: FilterGetOrderDto = {status,start:startC,end: endDate }
 
         const orders =await this.orderService.GetOrders(getOrderDto,user)
-        const response1 = new IngredientGraph()
-        response1.labels = new Array<string>()
-        response1.dataset = new Array<DatasetIngredient>()
+        const responesIngredient = new IngredientGraph()
+        responesIngredient.labels = new Array<string>()
+        responesIngredient.dataset = new Array<DatasetIngredient>()
 
         const ingredients =await this.ingedientService.GetAllIngredient(user)
 
@@ -246,9 +246,23 @@ export class PerformanceService {
             data.label = ingredient.name
             data.borderWidth = 1
             data.data = new Array<number>()
-            response1.dataset.push(data)
+            responesIngredient.dataset.push(data)
         })
 
+        const responseDish = new IngredientGraph()
+        responseDish.labels = new Array<string>()
+        responseDish.dataset = new Array<DatasetIngredient>()
+
+        const dishs =await this.dishService.GetAllDishs(user)
+
+        dishs.forEach(dish => {
+            const data = new DatasetIngredient()
+            data.label = dish.name
+            data.borderWidth = 1
+            data.data = new Array<number>()
+            responseDish.dataset.push(data)
+        })
+       
 
         for(let i = 8; i <= 21 ; i++){
             var orderFilter = orders.filter(function (e) {
@@ -295,20 +309,58 @@ export class PerformanceService {
                 });
             }
             analysis.ingredients.forEach(ingredient => {
-                const result = response1.dataset.find(e => e.label === ingredient.ingredient.name)
+                const result = responesIngredient.dataset.find(e => e.label === ingredient.ingredient.name)
                 result.data.push(ingredient.ingredientAmount)
             })
             
-            response1.labels.push(i.toString())
-            response1.dataset.forEach(e => {
-                if(e.data.length < response1.labels.length){
+            responesIngredient.labels.push(i.toString())
+            responesIngredient.dataset.forEach(e => {
+                if(e.data.length < responesIngredient.labels.length){
+                    e.data.push(0)
+                }
+            })
+
+            analysis.dishs.forEach(dish => {
+                const result = responseDish.dataset.find(e => e.label === dish.dish.name)
+                result.data.push(dish.dishAmount)
+            })
+            
+            responseDish.labels.push(i.toString())
+            responseDish.dataset.forEach(e => {
+                if(e.data.length < responseDish.labels.length){
                     e.data.push(0)
                 }
             })
 
         }
         
-       return {response1}
-        
+       return {ingredient :responesIngredient,dish :responseDish}
+    }
+
+    async GetOrderByHours(date: DateFilterDto,user: User){
+        const status = null 
+        const {start,end} =date 
+        const startC = new Date(start)
+        const endDate = new Date(end);
+
+        const getOrderDto: FilterGetOrderDto = {status,start:startC,end: endDate }
+
+        const orders =await this.orderService.GetOrders(getOrderDto,user)
+
+        const amount = new Array<number>()
+        const profit = new Array<number>()
+        for(let i = 8; i <= 21 ; i++){
+            let profitCount = 0
+            var orderFilter = orders.filter(function (e) {
+                return e.createdAt.getHours() >= i &&
+                       e.createdAt.getHours() < i+1
+            });
+            amount.push(orderFilter.length)
+            for(let i = 0 ; i <orderFilter.length; i++ ){
+                profitCount= +orderFilter[i].orderPrice +  +profitCount
+            }
+            profit.push(profitCount)
+        }
+        return {amount,profit}
     }
 }

@@ -77,9 +77,15 @@ export class PerformanceController {
     }
 
     //test
-    @Get("test")
+    @Get("performance-by-hour")
     @UseGuards(AuthGuard())
-    async Test(@Query() date: DateFilterDto, @GetUser() user: User){
-        return this.performanceService.GetOrderPerformanceDailyByHours(date,user)
+    async DishIngredientByHour(@Query() date: DateFilterDto, @GetUser() user: User){
+        return this.performanceService.GetDishIngredientByHours(date,user)
+    }
+
+    @Get("order-by-hour")
+    @UseGuards(AuthGuard())
+    async GetOrderByHours(@Query() date: DateFilterDto, @GetUser() user: User){
+        return this.performanceService.GetOrderByHours(date,user)
     }
 }
