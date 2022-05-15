@@ -69,10 +69,17 @@ export class PerformanceController {
         return this.performanceService.GetIngredientAnalysByDay2(date,user)
     }
 
-    dish
+    //dish
     @Get("dish-amount-by-day")
     @UseGuards(AuthGuard())
     async GetDishAnalysByDay(@Query() date: DateFilterDto, @GetUser() user: User){
         return this.performanceService.GetDishAnalysByDay2(date,user)
+    }
+
+    //test
+    @Get("test")
+    @UseGuards(AuthGuard())
+    async Test(@Query() date: DateFilterDto, @GetUser() user: User){
+        return this.performanceService.GetOrderPerformanceDailyByHours(date,user)
     }
 }

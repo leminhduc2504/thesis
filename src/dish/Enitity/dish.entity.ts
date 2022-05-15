@@ -12,8 +12,8 @@ export class Dish{
     @Column()
     name: string
 
-    @Column( {nullable: true})
-    estimatedCookingTime: number = 0
+    @Column({type: 'time',nullable: true})
+    estimatedCookingTime: number 
 
     @Column("decimal", { precision: 5, scale: 2 })
     retailPrice: number = 0

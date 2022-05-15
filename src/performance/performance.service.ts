@@ -197,11 +197,11 @@ export class PerformanceService {
         response.labels = new Array<string>()
         response.dataset = new Array<DatasetIngredient>()
 
-        const ingredients =await this.dishService.GetAllDishs(user)
+        const dishs =await this.dishService.GetAllDishs(user)
 
-        ingredients.forEach(ingredient => {
+        dishs.forEach(dish => {
             const data = new DatasetIngredient()
-            data.label = ingredient.name
+            data.label = dish.name
             data.borderWidth = 1
             data.data = new Array<number>()
             response.dataset.push(data)
@@ -224,5 +224,91 @@ export class PerformanceService {
         }
         return response
     }
+    
 
+    async GetOrderPerformanceDailyByHours(date: DateFilterDto,user: User){
+        const status = null 
+        const {start,end} =date 
+        const startC = new Date(start)
+        const endDate = new Date(end);
+
+        const getOrderDto: FilterGetOrderDto = {status,start:startC,end: endDate }
+
+        const orders =await this.orderService.GetOrders(getOrderDto,user)
+        const response1 = new IngredientGraph()
+        response1.labels = new Array<string>()
+        response1.dataset = new Array<DatasetIngredient>()
+
+        const ingredients =await this.ingedientService.GetAllIngredient(user)
+
+        ingredients.forEach(ingredient => {
+            const data = new DatasetIngredient()
+            data.label = ingredient.name
+            data.borderWidth = 1
+            data.data = new Array<number>()
+            response1.dataset.push(data)
+        })
+
+
+        for(let i = 8; i <= 21 ; i++){
+            var orderFilter = orders.filter(function (e) {
+                return e.createdAt.getHours() >= i &&
+                       e.createdAt.getHours() < i+1
+            });
+
+            const analysis : OrderAnalysis = new OrderAnalysis()
+            analysis.dishs = new Array<DishAnalysis>()
+            analysis.ingredients = new Array<IngredientAnalysis>()
+            orderFilter.forEach( (order) =>  {
+                analysis.retailPrice =+ analysis.retailPrice + +order.orderPrice
+                analysis.ingredientPrice =+ analysis.ingredientPrice + +order.ingredientPrice
+                order.orderDishs.forEach(  (orderDish)=> {
+                    const found = analysis.dishs.find( e => e.dish.id === orderDish.dish.id );
+                    if (found){
+                        found.dishAmount += orderDish.amount
+                    }
+
+                    else{
+                        const newDishs = new DishAnalysis()
+                        newDishs.dish = orderDish.dish
+                        newDishs.dishAmount = orderDish.amount
+                        analysis.dishs.push(newDishs)
+                    }
+                })
+            }) 
+            
+
+            for (let i = 0; i <analysis.dishs.length; i++ ){
+                const dishIngredients = await this.dishService.GetDishIngredients(analysis.dishs[i].dish.id);
+                dishIngredients.forEach((dishIngredient) => {
+                    const found = analysis.ingredients.find(e => e.ingredient.id === dishIngredient.ingredient.id);
+                    if (found) {
+                        found.ingredientAmount =+found.ingredientAmount + +dishIngredient.amount*+analysis.dishs[i].dishAmount;
+                    }
+                    
+                    else {
+                        const newIngredients = new IngredientAnalysis()
+                        newIngredients.ingredient = dishIngredient.ingredient;
+                        newIngredients.ingredientAmount = +dishIngredient.amount*+analysis.dishs[i].dishAmount;
+                        analysis.ingredients.push(newIngredients);
+                    }
+                });
+            }
+            analysis.ingredients.forEach(ingredient => {
+                const result = response1.dataset.find(e => e.label === ingredient.ingredient.name)
+                result.data.push(ingredient.ingredientAmount)
+            })
+            
+            response1.labels.push(i.toString())
+            response1.dataset.forEach(e => {
+                if(e.data.length < response1.labels.length){
+                    e.data.push(0)
+                }
+            })
+
+        }
+        
+       return {response1}
+        
+    }
 }
