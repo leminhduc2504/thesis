@@ -380,12 +380,8 @@ export class PerformanceService {
         }
 
         let response = Array<DishCookingPerformance>()
-        console.log(foundOrderDish)
         for(let i = 0 ; i < foundOrderDish.length; i++){
             let foundResponse = response.find(e => e.dish == foundOrderDish[i].dish)
-            console.log()
-            console.log(i)
-            console.log(foundResponse)
             if(foundResponse){
 
                 foundResponse.amount = +foundResponse.amount +1
