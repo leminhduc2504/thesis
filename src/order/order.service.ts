@@ -103,6 +103,14 @@ export class OrderService {
         return this.orderDishRepository.PatchFinishCookTime(id, createDto)
     }
 
+    async GetOrderDishByDishId(dishId: string){
+        return this.orderDishRepository.GetDishIdByOrderDishId(dishId)
+    }
+
+    async GetOrderDishsByOrderId(orderId){
+        return this.orderDishRepository.GetOrderDishs(orderId)
+    }
+
 
 
     GetTime():Date{

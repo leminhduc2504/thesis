@@ -14,6 +14,8 @@ import { DishAnalysis, IngredientAnalysis, OrderAnalysis } from './Dto/order-ana
 import { DatasetIngredient, IngredientGraph, ReponseFilterOrderByDay, ResponseDishAnalysByDay, ResponseIngredientAnalysByDay } from './Dto/reponse-order-filter-day.dto';
 import { InventoryService } from 'src/inventory/inventory.service';
 import e, { response } from 'express';
+import { OrderDish } from 'src/order/Entity/order-dish.entity';
+import { DishCookingPerformance } from './Dto/cooking-performance-response.dto';
 
 @Injectable()
 export class PerformanceService {
@@ -363,4 +365,76 @@ export class PerformanceService {
         }
         return {amount,profit}
     }
+
+    async GetDishCookingPerformanceByDay(date:DateFilterDto, user:User){
+        const status = null 
+        const {start,end} =date 
+        const startC = new Date(start)
+        const endDate = new Date(startC.getTime() + (1000 * 60 * 60 * 24));
+
+        const getOrderDto: FilterGetOrderDto = {status,start:startC,end: endDate }
+
+        const orders =await this.orderService.GetOrders(getOrderDto,user)
+        const foundOrderDish = Array<OrderDish>()
+        for(let i = 0 ; i < orders.length; i++){
+            foundOrderDish.push(... await this.orderService.GetOrderDishsByOrderId(orders[i].orderId))
+        }
+        const response = Array<DishCookingPerformance>()
+
+        for(let i = 0 ; i < foundOrderDish.length; i++){
+            const foundResponse = response.find(e => e.dish.id == foundOrderDish[i].dish.id)
+            if(foundResponse){
+                foundResponse.amount = +foundResponse.amount +1
+                foundResponse.orderDish.push(foundOrderDish[i])
+                foundResponse.secondCookingTimeTotal =+foundResponse.secondCookingTimeTotal + +this.TimeStringToSecond(foundOrderDish[i].cookingTime)
+                foundResponse.cookingTimeAvr =this.SecondToTimeString(foundResponse.secondCookingTimeTotal/ foundResponse.amount)
+
+
+            }
+            else {
+                const dishCookingPerformance = new DishCookingPerformance()
+                dishCookingPerformance.amount = 1
+                dishCookingPerformance.dish = foundOrderDish[i].dish
+                dishCookingPerformance.secondCookingTimeTotal = +this.TimeStringToSecond(foundOrderDish[i].cookingTime)
+                dishCookingPerformance.orderDish = new Array<OrderDish>()
+                dishCookingPerformance.orderDish.push(foundOrderDish[i])
+                dishCookingPerformance.cookingTimeAvr =this.SecondToTimeString(dishCookingPerformance.secondCookingTimeTotal)
+                const foundDish =await this.dishService.GetDishById(foundOrderDish[i].dish.id)
+                dishCookingPerformance.cookingTimeEst = foundDish.estimatedCookingTime
+                response.push(dishCookingPerformance)
+            }
+            
+        }
+        return response
+    }
+
+    TimeStringToSecond(timeString : string): number{
+        const [hours, minutes, seconds] = timeString.split(':');
+        const totalSeconds = (+hours) * 60 * 60 + (+minutes) * 60 + (+seconds);
+        return totalSeconds
+    }
+
+    SecondToTimeString(e){
+        var h = Math.floor(e / 3600).toString().padStart(2,'0'),
+            m = Math.floor(e % 3600 / 60).toString().padStart(2,'0'),
+            s = Math.floor(e % 60).toString().padStart(2,'0');
+        return h + ':' + m + ':' + s;
+    }
+
+
+    async GetIngredientChangeByUserByDay(date:DateFilterDto, user:User){
+        const {start,end} =date 
+        const startC = new Date(start)
+        const endDate = new Date(end);
+
+        const response = this.ingedientService.GetStockChangeHistoryByUserByDay({start:startC,end:endDate},user)
+        return response
+    }
+
+    async GetTop5DishIngredient7Dyas(filter: DateFilterDto,user:User){
+        
+        
+    }
 }
+
+

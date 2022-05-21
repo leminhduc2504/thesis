@@ -50,7 +50,7 @@ export class Ingredient{
     @OneToMany((_type) => StockChangeHistory, (stockChangeHistory) => stockChangeHistory.ingredient, {eager:false})
     stockChangeHistory: StockChangeHistory[]
 
-    @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:true} )
+    @ManyToOne((_type) => Supplier, supplier => supplier.ingredients, {eager:true, cascade: true} )
     supplier: Supplier
 
     @Column({nullable: true})

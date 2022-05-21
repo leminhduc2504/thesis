@@ -20,7 +20,7 @@ export class Supplier{
     @ManyToOne((_type) => User, user => user.suppliers, {eager:false})
     user:User
 
-    @OneToMany( (_type) => Ingredient, (ingredient) => ingredient.supplier,{cascade:true})
+    @OneToMany( (_type) => Ingredient, (ingredient) => ingredient.supplier)
     ingredients: Ingredient[]
 
     @OneToMany((_type) => Invoice, (invoice) => invoice.supplier)

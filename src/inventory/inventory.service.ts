@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
 import { User } from 'src/auth/user.entity';
 import { CreateDishCategoryDto } from 'src/dish/Dto/create-dish-category.dto';
+import { DateFilterDto } from 'src/performance/Dto/get-filter-dto';
 import { SupplierService } from 'src/supplier/supplier.service';
 import { ChangeIngredientDto } from './Dto/change-ingredient.dto';
 import { ChangeThresholdIngredientDto } from './Dto/change-threshold-ingredient.dto';
@@ -81,15 +82,24 @@ export class InventoryService {
     }
 
     async CreateInvoice(createInvoiceDto: CreateInvoiceDto, user:User){
-        const { ingredientId } = createInvoiceDto
+        const { ingredientId,amount, invoicePrice, unit } = createInvoiceDto
         const ingredient = await this.GetIngredientsById(ingredientId)
         if(ingredient.supplier == null){
             throw new BadRequestException("Please set supplier")
         }
-        return this.invoiceRepository.CreateInvocie(createInvoiceDto, 
-            ingredient,
-            ingredient.supplier, 
-            user)
+        else{
+            try{
+                await this.sendSMS(ingredient.supplier.phoneNumber,amount,ingredient,user)
+                return this.invoiceRepository.CreateInvocie(createInvoiceDto, 
+                    ingredient,
+                    ingredient.supplier, 
+                    user)
+            }
+            catch(e){
+                throw e
+            }
+        }
+        
     }
 
     async AcceptInvoice(invoiceId: string, user:User){
@@ -116,14 +126,18 @@ export class InventoryService {
         return this.stockChangeHistoryRepository.CreateStockHistory(createDto,user)
     }
 
-    async sendSMS() {
+    async sendSMS(supplierPhone: string, amount: number, ingredient: Ingredient, user: User) {
         try {
+            this.client.validationRequests
+            .create({friendlyName: 'My Home Phone Number', phoneNumber:supplierPhone})
+            .then(validation_request => console.log(validation_request.friendlyName));
           return await this.client.messages.create({
-            body: 'Your Ingredient Has Been Ordered',
+            body: 'Order request from: ' +user.username + " - Ingredient: " + ingredient.name + " - Amount: " + amount + " " + ingredient.unit,
             from: "+19892678221",
-            to: "+84392523079",
+            to: "+" + supplierPhone,
           });
         } catch (e) {
+            console.log(e)
           return e;
         }
     }
@@ -179,4 +193,11 @@ export class InventoryService {
         }
             
     }
+
+    async  GetStockChangeHistoryByUserByDay(filter: DateFilterDto, user: User){
+        const found = this.stockChangeHistoryRepository.GetStockChangeHistoryByUserByDay(filter,user)
+        
+    }
+
+    
 }
