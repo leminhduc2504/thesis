@@ -51,7 +51,7 @@ export class PerformanceService {
         const startC = new Date(start)
         const endDate = new Date(startC.getTime() + (1000 * 60 * 60 * 24));
 
-        const getOrderDto: FilterGetOrderDto = {status,start:startC,end: endDate }
+        const getOrderDto: FilterGetOrderDto = {status,start:startC,end: startC }
         const orders =await this.orderService.GetOrders(getOrderDto,user)
         
         const analysis : OrderAnalysis = new OrderAnalysis()
@@ -370,36 +370,38 @@ export class PerformanceService {
         const status = null 
         const {start,end} =date 
         const startC = new Date(start)
-        const endDate = new Date(startC.getTime() + (1000 * 60 * 60 * 24));
 
-        const getOrderDto: FilterGetOrderDto = {status,start:startC,end: endDate }
-
+        const getOrderDto: FilterGetOrderDto = {status,start:startC,end: startC }
+       
         const orders =await this.orderService.GetOrders(getOrderDto,user)
-        const foundOrderDish = Array<OrderDish>()
+        let foundOrderDish = Array<OrderDish>()
         for(let i = 0 ; i < orders.length; i++){
-            foundOrderDish.push(... await this.orderService.GetOrderDishsByOrderId(orders[i].orderId))
+            foundOrderDish = foundOrderDish.concat(await this.orderService.GetOrderDishsByOrderId(orders[i].orderId))
         }
-        const response = Array<DishCookingPerformance>()
 
+        let response = Array<DishCookingPerformance>()
+        console.log(foundOrderDish)
         for(let i = 0 ; i < foundOrderDish.length; i++){
-            const foundResponse = response.find(e => e.dish.id == foundOrderDish[i].dish.id)
+            let foundResponse = response.find(e => e.dish == foundOrderDish[i].dish)
+            console.log()
+            console.log(i)
+            console.log(foundResponse)
             if(foundResponse){
+
                 foundResponse.amount = +foundResponse.amount +1
                 foundResponse.orderDish.push(foundOrderDish[i])
                 foundResponse.secondCookingTimeTotal =+foundResponse.secondCookingTimeTotal + +this.TimeStringToSecond(foundOrderDish[i].cookingTime)
                 foundResponse.cookingTimeAvr =this.SecondToTimeString(foundResponse.secondCookingTimeTotal/ foundResponse.amount)
-
-
             }
             else {
-                const dishCookingPerformance = new DishCookingPerformance()
+                let dishCookingPerformance = new DishCookingPerformance()
                 dishCookingPerformance.amount = 1
                 dishCookingPerformance.dish = foundOrderDish[i].dish
                 dishCookingPerformance.secondCookingTimeTotal = +this.TimeStringToSecond(foundOrderDish[i].cookingTime)
                 dishCookingPerformance.orderDish = new Array<OrderDish>()
                 dishCookingPerformance.orderDish.push(foundOrderDish[i])
                 dishCookingPerformance.cookingTimeAvr =this.SecondToTimeString(dishCookingPerformance.secondCookingTimeTotal)
-                const foundDish =await this.dishService.GetDishById(foundOrderDish[i].dish.id)
+                let foundDish =await this.dishService.GetDishById(foundOrderDish[i].dish.id)
                 dishCookingPerformance.cookingTimeEst = foundDish.estimatedCookingTime
                 response.push(dishCookingPerformance)
             }
