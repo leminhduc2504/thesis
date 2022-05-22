@@ -12,13 +12,18 @@ import { AutoRefillStatus, Ingredient, IngredientUnit } from "../Entity/ingredie
 export class IngredientRepository extends Repository<Ingredient>{
 
     async GetIngredients(filterDto: GetIngredientsFilterDto, user: User): Promise<Ingredient[]>{
-        const {search} = filterDto
+        const {search,categoryName} = filterDto
         const query = this.createQueryBuilder('ingredient')
         query.where({user})
         .leftJoinAndSelect("ingredient.ingredientCategory","ingredientCategory")
         if(search){
             query.andWhere(
                 'ingredient.name = :search', {search: `%${search}%`}
+            )
+        }
+        if(categoryName){
+            query.andWhere(
+                'ingredientCategory.name = :categoryName', {categoryName}
             )
         }
         const ingredients =await query.getMany()
