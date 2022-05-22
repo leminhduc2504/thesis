@@ -10,7 +10,7 @@ export class IngredientCategory{
     @Column({nullable: false})
     name: string
 
-    @OneToMany((_type) => Ingredient, (ingredients) => ingredients.ingredientCategory)
+    @OneToMany((_type) => Ingredient, (ingredients) => ingredients.ingredientCategory,{eager:true})
     ingredients: Ingredient[]
 
     @ManyToOne((_type) => User, user => user.ingredientCategories, {onDelete: 'CASCADE'})

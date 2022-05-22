@@ -16,6 +16,7 @@ import { InventoryService } from 'src/inventory/inventory.service';
 import e, { response } from 'express';
 import { OrderDish } from 'src/order/Entity/order-dish.entity';
 import { DishCookingPerformance } from './Dto/cooking-performance-response.dto';
+import { start } from 'repl';
 
 @Injectable()
 export class PerformanceService {
@@ -122,38 +123,6 @@ export class PerformanceService {
         return response
     }
     
-
-    async GetIngredientAnalysByDay(date: DateFilterDto,user: User) {
-        const status = null 
-        let {start,end} =date 
-        const startC = new Date(start)
-        const endC = new Date(end)
-        const response = new ResponseIngredientAnalysByDay()
-        response.dates = new Array<string>()
-        response.ingredientAnalys = new Array<Array<IngredientAnalysis>>()
-        for (let date_ =startC ; date_ <= endC; date_.setHours(date_.getHours() + 24)) {
-            const raw = await this.GetOrderPerformanceDaily({start:date_,end}, user)
-            response.ingredientAnalys.push(raw.ingredients)
-            response.dates.push(date_.toLocaleDateString("he-il"))
-        }
-        return response
-    }
-
-    async GetDishAnalysByDay(date: DateFilterDto,user: User) {
-        const status = null 
-        let {start,end} =date 
-        const startC = new Date(start)
-        const endC = new Date(end)
-        const response = new ResponseDishAnalysByDay()
-        response.dates = new Array<string>()
-        response.dishAnalys = new Array<Array<DishAnalysis>>()
-        for (let date_ =startC ; date_ <= endC; date_.setHours(date_.getHours() + 24)) {
-            const raw = await this.GetOrderPerformanceDaily({start:date_,end}, user)
-            response.dishAnalys.push(raw.dishs)
-            response.dates.push(date_.toLocaleDateString("he-il"))
-        }
-        return response
-    }
 
     async GetIngredientAnalysByDay2(date: DateFilterDto,user: User) {
         let {start,end} =date 
@@ -420,18 +389,57 @@ export class PerformanceService {
     }
 
 
-    async GetIngredientChangeByUserByDay(date:DateFilterDto, user:User){
-        const {start,end} =date 
-        const startC = new Date(start)
-        const endDate = new Date(end);
+    async GetOrderPerformanceWeekly(date: DateFilterDto,user: User): Promise<OrderAnalysis>{
+        const status = null 
+        const {start} =date 
+        const endDate = new Date(start)
+        const startDate = new Date(endDate.getTime() - (1000 * 60 * 60 * 24 * 7));
 
-        const response = this.ingedientService.GetStockChangeHistoryByUserByDay({start:startC,end:endDate},user)
-        return response
+        const getOrderDto: FilterGetOrderDto = {status,start:startDate,end: endDate }
+        const orders =await this.orderService.GetOrders(getOrderDto,user)
+        
+        const analysis : OrderAnalysis = new OrderAnalysis()
+        analysis.dishs = new Array<DishAnalysis>()
+        analysis.ingredients = new Array<IngredientAnalysis>()
+        orders.forEach( (order) =>  {
+            order.orderDishs.forEach(  (orderDish)=> {
+                
+                const found = analysis.dishs.find( e => e.dish.id === orderDish.dish.id );
+                if (found){
+                    found.dishAmount += orderDish.amount
+                }
+
+                else{
+                    const newDishs = new DishAnalysis()
+                    newDishs.dish = orderDish.dish
+                    newDishs.dishAmount = orderDish.amount
+                    analysis.dishs.push(newDishs)
+                }
+            })
+        }) 
+
+        for (let i = 0; i <analysis.dishs.length; i++ ){
+            const dishIngredients = await this.dishService.GetDishIngredients(analysis.dishs[i].dish.id);
+            dishIngredients.forEach((dishIngredient) => {
+                const found = analysis.ingredients.find(e => e.ingredient.id === dishIngredient.ingredient.id);
+                if (found) {
+                    found.ingredientAmount =+found.ingredientAmount + +dishIngredient.amount*+analysis.dishs[i].dishAmount;
+                }
+                
+                else {
+                    const newIngredients = new IngredientAnalysis()
+                    newIngredients.ingredient = dishIngredient.ingredient;
+                    newIngredients.ingredientAmount = +dishIngredient.amount*+analysis.dishs[i].dishAmount;
+                    analysis.ingredients.push(newIngredients);
+                }
+            });
+        }
+        return  analysis
     }
 
-    async GetTop5DishIngredient7Dyas(filter: DateFilterDto,user:User){
-        
-        
+    async GetTop5DishIngredient7Days(filter: DateFilterDto,user:User){
+        const raw = this.GetOrderPerformanceWeekly(filter,user)
+        return raw
     }
 }
 

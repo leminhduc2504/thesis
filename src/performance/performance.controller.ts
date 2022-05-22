@@ -95,10 +95,10 @@ export class PerformanceController {
         return this.performanceService.GetDishCookingPerformanceByDay(date,user)
     }
 
-    @Get("ingredient-change-stock")
+    @Get("top5")
     @UseGuards(AuthGuard())
     async GetIngredientChangeStockByDay(@Query() date: DateFilterDto, @GetUser() user: User){
-        return this.performanceService.GetIngredientChangeByUserByDay(date,user)
+        return this.performanceService.GetTop5DishIngredient7Days(date,user)
     }
 
 
