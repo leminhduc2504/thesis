@@ -16,6 +16,7 @@ export class IngredientRepository extends Repository<Ingredient>{
         const query = this.createQueryBuilder('ingredient')
         query.where({user})
         .leftJoinAndSelect("ingredient.ingredientCategory","ingredientCategory")
+        .leftJoinAndSelect("ingredient.supplier","supplier")
         if(search){
             query.andWhere(
                 'ingredient.name = :search', {search: `%${search}%`}
