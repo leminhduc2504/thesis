@@ -9,7 +9,7 @@ export class Invoice{
     invoceId : string
 
     @Column()
-    status: InvoiceStatus = InvoiceStatus.onDelivery
+    status: InvoiceStatus = InvoiceStatus.opening
 
     @CreateDateColumn()
     createdAt: Date 
@@ -47,6 +47,7 @@ export class Invoice{
 
 
 export const enum InvoiceStatus{
+    opening = "Openning",
     onDelivery = "On Delivery",
     finished = "Finished",
 }

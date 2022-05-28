@@ -60,6 +60,7 @@ export class FeedbackRepository extends Repository<Feedback>{
         if(start && end){
             query.andWhere('feedback.createdAt BETWEEN :start_ AND :end_', {start_ , end_});
         }
+        query.orderBy("time", "DESC")
         const feedbacks =await query.getMany()
         return feedbacks
     }

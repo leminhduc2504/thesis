@@ -41,6 +41,11 @@ export class InvoiceRepository extends Repository<Invoice>{
     }
 
     
+    async DeliveryInvoice(invoceId: string, user: User){
+        const invoice = await this.findOne({invoceId, user})
+        invoice.status = InvoiceStatus.onDelivery
+        await this.save(invoice)
+    }
 
     async AcceptInvoice(invoceId: string, user: User){
         const deliveredAt = new Date();

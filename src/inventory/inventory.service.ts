@@ -102,6 +102,10 @@ export class InventoryService {
         
     }
 
+    async DeliveryInvoice(invoiceId: string, user:User){
+        return this.invoiceRepository.DeliveryInvoice(invoiceId,user)
+    }
+
     async AcceptInvoice(invoiceId: string, user:User){
         try{
             this.invoiceRepository.AcceptInvoice(invoiceId, user)
