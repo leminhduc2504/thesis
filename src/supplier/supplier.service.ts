@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { CreateSupplierDto } from './Dto/create-supplier.dto';
+import { PatchSupplierDto } from './Dto/patch-supplier.dto';
 import { Supplier } from './Entity/supplier.entity';
 import { SupplierRepository } from './supplier.repository';
 
@@ -25,6 +26,8 @@ export class SupplierService {
         return this.supplierRepository.CreateSupplier(createSupplierDto, user)
     }
 
-    
+    async PatchSupplier(id: string,patchSupplierDto: PatchSupplierDto, user:User){
+        return this.supplierRepository.PatchSupplier(id,patchSupplierDto,user)
+    }
 
 }

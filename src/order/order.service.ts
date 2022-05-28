@@ -95,6 +95,7 @@ export class OrderService {
         return this.orderDishRepository.GetDishIdByOrderDishId(id)
     }
 
+ 
     async PatchStartCookTime(id, createDto){
         return this.orderDishRepository.PatchStartCookTime(id, createDto)
     }
@@ -110,6 +111,12 @@ export class OrderService {
     async GetOrderDishsByOrderId(orderId){
         return this.orderDishRepository.GetOrderDishs(orderId)
     }
+
+    async GetOrderDishsByOrderId2(orderId){
+        return this.orderDishRepository.GetOrderDishs2(orderId)
+    }
+
+
 
 
 

@@ -17,6 +17,21 @@ export class OrderDishRepository extends Repository<OrderDish>{
         return found;
     }
 
+    async GetOrderDishs2(order_id: string){
+        const query = this.createQueryBuilder('order-dish')
+        query.leftJoinAndSelect("order-dish.order","order")
+        .leftJoinAndSelect("order-dish.dish", "dish")
+        .andWhere(
+            'order.orderId = :order_id', {order_id}
+        )
+        .andWhere(
+            "order-dish.cookingTime IS NOT NULL"
+            )
+        const dishs =await query.getMany()
+        return dishs;
+    }
+
+    
     async GetOrderDishsByDishId(dishId: string){
         const found =await this.find({
             relations: ['dish'],

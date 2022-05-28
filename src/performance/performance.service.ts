@@ -345,12 +345,12 @@ export class PerformanceService {
         const orders =await this.orderService.GetOrders(getOrderDto,user)
         let foundOrderDish = Array<OrderDish>()
         for(let i = 0 ; i < orders.length; i++){
-            foundOrderDish = foundOrderDish.concat(await this.orderService.GetOrderDishsByOrderId(orders[i].orderId))
+            foundOrderDish = foundOrderDish.concat(await this.orderService.GetOrderDishsByOrderId2(orders[i].orderId))
         }
 
         let response = Array<DishCookingPerformance>()
         for(let i = 0 ; i < foundOrderDish.length; i++){
-            let foundResponse = response.find(e => e.dish == foundOrderDish[i].dish)
+            let foundResponse = response.find(e => e.dish.id == foundOrderDish[i].dish.id)
             if(foundResponse){
 
                 foundResponse.amount = +foundResponse.amount +1
@@ -362,6 +362,7 @@ export class PerformanceService {
                 let dishCookingPerformance = new DishCookingPerformance()
                 dishCookingPerformance.amount = 1
                 dishCookingPerformance.dish = foundOrderDish[i].dish
+                // dishCookingPerformance.dishName =foundOrderDish[i].dish.id
                 dishCookingPerformance.secondCookingTimeTotal = +this.TimeStringToSecond(foundOrderDish[i].cookingTime)
                 dishCookingPerformance.orderDish = new Array<OrderDish>()
                 dishCookingPerformance.orderDish.push(foundOrderDish[i])

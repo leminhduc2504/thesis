@@ -2,6 +2,7 @@ import { NotFoundException } from "@nestjs/common";
 import { User } from "src/auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { CreateSupplierDto } from "./Dto/create-supplier.dto";
+import { PatchSupplierDto } from "./Dto/patch-supplier.dto";
 import { Supplier } from "./Entity/supplier.entity";
 
 @EntityRepository(Supplier)
@@ -28,5 +29,24 @@ export class SupplierRepository extends Repository<Supplier>{
         const newSupplier = this.create({name,email,phoneNumber,user})
         await this.save(newSupplier)
         return newSupplier
+    }
+
+    async PatchSupplier(id: string, patchSupplierDto: PatchSupplierDto, user:User){
+        const {name, email,phone} =patchSupplierDto
+        let found =await this.findOne({id,user})
+        if(!found){
+            throw new NotFoundException("Not found supplier")
+        }
+        if(name){
+            found.name = name
+        }
+        if(phone){
+            found.phoneNumber = phone
+        }
+        if(email){
+            found.email = email
+        }
+        await this.save(found)
+        
     }
 }
