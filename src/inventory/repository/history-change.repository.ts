@@ -37,7 +37,6 @@ export class StockChangeHistoryRepository extends Repository<StockChangeHistory>
         const {note,ingredient,amount} = createDto
 
         const createdAt = new Date();
-        createdAt.setHours(createdAt.getHours() - createdAt.getTimezoneOffset() / 60);
         
         const stockChange = this.create({createdAt,note,ingredient,amount,user})
         await this.save(stockChange)
